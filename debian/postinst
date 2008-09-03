@@ -1,0 +1,25 @@
+#!/bin/sh
+######################################################################
+# eeepc-config by F.Hendrikx, (c) 2008
+# postinst script
+######################################################################
+set -e
+
+
+# add eeepc-config init.d script
+
+if [ -x "/etc/init.d/eeepc-config" ]; then
+	update-rc.d eeepc-config start 15 2 3 4 5 . stop 85 0 . || exit $?
+fi
+
+
+# remove asus mail ACPI event
+
+rm -f /etc/acpi/events/asus-mail
+
+
+# restart ACPI
+
+invoke-rc.d acpid restart
+
+exit 0

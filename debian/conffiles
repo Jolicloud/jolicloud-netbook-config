@@ -1,0 +1,5 @@
+/etc/acpi/eeepc-hotkeys.sh
+/etc/acpi/eeepc-wireless-toggle.sh
+/etc/acpi/events/eeepc-hotkey
+/etc/init.d/eeepc-config
+/etc/modprobe.d/eeepc

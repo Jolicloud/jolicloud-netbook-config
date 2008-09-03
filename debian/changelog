@@ -1,0 +1,22 @@
+eeepc-config (1.3-1) unstable; urgency=low
+
+  * Added patches from Adam McDaniel (including fixes, 900 series support and
+    changes that allow clean module loading)
+  * Fixed some minor issues
+
+ -- Ferry Hendrikx <ferry.hendrikx@gmail.com>  Tue,  2 Sep 2008 18:45:00 +1200
+
+eeepc-config (1.2-1) unstable; urgency=low
+
+  * Added Eee PC hotkey support
+  * Added Eee PC specific fixes
+  * Added Eee PC USB persist fixes
+
+ -- Ferry Hendrikx <ferry.hendrikx@gmail.com>  Sat, 16 Aug 2008 20:25:00 +1200
+
+eeepc-config (1.1-1) unstable; urgency=low
+
+  * Initial Revision
+
+ -- Ferry Hendrikx <ferry.hendrikx@gmail.com>  Wed, 13 Aug 2008 18:30:00 +1200
+

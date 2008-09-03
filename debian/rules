@@ -1,0 +1,64 @@
+#!/usr/bin/make -f
+
+install_dir=install -d -m 755
+install_file=install -m 644
+install_script=install -m 755
+install_binary=install -m 755 -s
+
+DEBVERSION := $(shell dpkg-parsechangelog | grep ^Version: | cut -d' ' -f2)
+
+build:
+
+clean:
+	$(checkdir)
+	-rm -f  *~ */*~ debian/files* debian/*substvars
+	-rm -rf debian/tmp
+
+binary-indep: checkroot
+	$(checkdir)
+	-rm -rf debian/tmp
+
+	$(install_dir) debian/tmp/DEBIAN/
+	$(install_file) debian/conffiles debian/tmp/DEBIAN/
+	$(install_script) debian/postinst debian/tmp/DEBIAN/
+	$(install_script) debian/postrm debian/tmp/DEBIAN/
+
+	$(install_dir) debian/tmp/etc/acpi/
+	$(install_script) etc/acpi/*.sh debian/tmp/etc/acpi/
+	$(install_dir) debian/tmp/etc/acpi/events/
+	$(install_file) etc/acpi/events/* debian/tmp/etc/acpi/events/
+	$(install_dir) debian/tmp/etc/init.d/
+	$(install_script) etc/init.d/* debian/tmp/etc/init.d/
+	$(install_dir) debian/tmp/etc/modprobe.d/
+	$(install_file) etc/modprobe.d/* debian/tmp/etc/modprobe.d/
+
+	$(install_dir) debian/tmp/usr/lib/pm-utils/sleep.d/
+	$(install_script) usr/lib/pm-utils/sleep.d/* debian/tmp/usr/lib/pm-utils/sleep.d/
+
+	$(install_dir) debian/tmp/usr/share/doc/eeepc-config/
+	$(install_file) debian/changelog debian/tmp/usr/share/doc/eeepc-config/changelog.Debian
+	gzip -9v debian/tmp/usr/share/doc/eeepc-config/*
+	$(install_file) debian/copyright debian/tmp/usr/share/doc/eeepc-config/
+	$(install_file) usr/share/doc/eeepc-config/* debian/tmp/usr/share/doc/eeepc-config/
+
+	dpkg-gencontrol -peeepc-config
+
+	chown -R root:root debian/tmp
+	chmod -R go=rX debian/tmp
+	dpkg --build debian/tmp ..
+
+binary-arch:
+
+define checkdir
+	test -f debian/rules
+endef
+
+# Below here is fairly generic really
+
+binary: binary-indep binary-arch
+
+checkroot:
+	$(checkdir)
+	test root = "`whoami`"
+
+.PHONY: binary binary-arch binary-indep clean checkroot
