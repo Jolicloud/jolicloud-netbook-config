@@ -1,9 +1,9 @@
 #!/bin/sh
 ######################################################################
-# eeepc-config v1.3 by Ferry Hendrikx, (c) 2008
+# eeepc v1.3 by Ferry Hendrikx, (c) 2008
 #
 # System script that automatically configures the appropriate modules
-# depending on the Asus Eee PC model.
+# depending on the Asus Eee PC model number. 
 #
 # This script will only work on Asus equipment.
 #
@@ -24,19 +24,29 @@ NAME="eeepc-config"
 DESC="Asus Eee PC configuration"
 
 DMIDEC='/usr/sbin/dmidecode'
+MODPROBE='/sbin/modprobe'
+SYSCTL='/sbin/sysctl'
 
-DEVICE=`${DMIDEC} -s system-manufacturer`
-SYSTEM=`${DMIDEC} -s system-product-name`
+VENDOR=`${DMIDEC} -s system-manufacturer`
+PRODUCT=`${DMIDEC} -s system-product-name`
 KERNEL=`uname -r`
 
 EEEPC=0
 
+
 . /lib/lsb/init-functions
+
+
+# Load defaults
+
+if [ -e /etc/default/eeepc-config ]; then
+    . /etc/default/eeepc-config
+fi
 
 
 # Is this an Asus Eee PC?
 
-if echo "${DEVICE}" | grep -qi "asustek"; then
+if echo "${VENDOR}" | grep -qi "asustek"; then
 	if echo "${KERNEL}" | grep -q eeepc$; then
 		EEEPC=1
 	fi
@@ -49,17 +59,77 @@ if [ "${EEEPC}" = "0" ]; then
 fi
 
 
+######################################################################
+# 
+# functions
+#
+######################################################################
+
+set_sysctl () {
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		${SYSCTL} -w $@
+	else
+		${SYSCTL} -w $1 > /dev/null
+	fi
+}
+
+
+set_sysfs () {
+	if [ ! -e $1 ]; then
+		echo "Error: cannot find $1"
+		exit 1;
+	fi
+
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		echo "$1 = $2"
+	fi
+
+	echo $2 > $1
+}
+
+
+insert_module () {
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		${MODPROBE} -v $@
+	else
+		${MODPROBE} $@
+	fi
+}
+
+
+remove_module () {
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		${MODPROBE} -r -v $@
+	else
+		${MODPROBE} -r $@
+	fi
+}
+
+
+######################################################################
+# 
+# main
+#
+######################################################################
+
 do_start () {
 	log_action_begin_msg "Starting $NAME"
+
+	# Since /var/log may be under tmpfs control, some sub-dirs need to
+	# be created manually during the boot process.
+
+	if [ ! -d /var/log/apt ]; then
+		mkdir -p /var/log/apt
+	fi
 
 
 	# Common settings
 
-	/sbin/sysctl -w dev.wifi0.ledpin=1
-	/sbin/sysctl -w dev.wifi0.softled=1
+	set_sysctl dev.wifi0.ledpin=1
+	set_sysctl dev.wifi0.softled=1
 
-	/sbin/sysctl -w vm.swappiness=0
-	/sbin/sysctl -w vm.dirty_writeback_centisecs=1500
+	set_sysctl vm.swappiness=0
+	set_sysctl vm.dirty_writeback_centisecs=1500
 
 
 	# Load modules
@@ -67,19 +137,47 @@ do_start () {
 	# Probing of the network devices will be unnecessary in a
 	# future eeepc kernel version.
 
-	if [ "${SYSTEM}" = "700" -o "${SYSTEM}" = "701" -o "${SYSTEM}" = "900" ]; then
-		/sbin/modprobe ath_pci
-		/sbin/modprobe atl2
+	# The Atheros/Attansic(v2) network drivers are supported by the 
+	# EeePC 900-series and earlier. Ralink/Attansic(v1) drivers are
+	# supported by the EeePC 901-series and later.
+
+	# FIXME: What hardware does the 900A support?
+
+	if [ ${PRODUCT} -le 900 ]; then
+		insert_module ath_pci
+		insert_module atl2
 	else
-		/sbin/modprobe rt2860sta
-		/sbin/modprobe atl1e
+		insert_module rt2860sta
+		insert_module atl1e
 	fi
 
-	/sbin/modprobe eeepc_acpi
-	/sbin/modprobe pciehp pciehp_debug=1 pciehp_force=1
-	/sbin/modprobe p4_clockmod
-	/sbin/modprobe i2c-i801
-	/sbin/modprobe asus_eee
+
+	# Note: special snd_hda_intel module options are handled in
+	# /etc/modprobe.d/eeepc
+
+	insert_module eeepc_acpi
+	insert_module pciehp pciehp_debug=1 pciehp_force=1
+	insert_module p4_clockmod
+	insert_module i2c-i801
+	insert_module asus_eee
+
+
+	# Set other configuration options
+
+	if [ "${EEEPC_CPUFREQ_MIN_FREQ}" != "" ]; then
+		for i in `find /sys/devices/system/cpu -name scaling_min_freq`; do
+			set_sysfs $i ${EEEPC_CPUFREQ_MIN_FREQ}
+		done
+	fi
+
+	if [ "${EEEPC_CPUFREQ_GOVERNOR}" != "" ]; then
+		for i in `find /sys/devices/system/cpu -name scaling_governor`; do
+			set_sysfs $i ${EEEPC_CPUFREQ_GOVERNOR}
+		done
+	fi
+
+
+	# finished
 
 	log_action_end_msg $?
 }
@@ -96,9 +194,12 @@ do_stop () {
 
 	if [ "${RUNLEVEL}" = "0" ]; then
 		if grep -q snd_hda_intel /proc/modules; then
-			/sbin/modprobe -r snd_hda_intel
+			remove_module snd_hda_intel
 		fi
 	fi
+
+
+	# finished
 
 	log_action_end_msg $?
 }
