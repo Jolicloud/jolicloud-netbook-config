@@ -1,0 +1,124 @@
+#!/bin/sh
+######################################################################
+# eeepc-config v1.3 by Ferry Hendrikx, (c) 2008
+#
+# System script that automatically configures the appropriate modules
+# depending on the Asus Eee PC model.
+#
+# This script will only work on Asus equipment.
+#
+######################################################################
+### BEGIN INIT INFO
+# Provides:          eeepc-config
+# Required-Start:
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0
+# Short-Description: Asus Eee PC configuration
+# Description:
+### END INIT INFO
+
+set -e
+
+NAME="eeepc-config"
+DESC="Asus Eee PC configuration"
+
+DMIDEC='/usr/sbin/dmidecode'
+
+DEVICE=`${DMIDEC} -s system-manufacturer`
+SYSTEM=`${DMIDEC} -s system-product-name`
+KERNEL=`uname -r`
+
+EEEPC=0
+
+. /lib/lsb/init-functions
+
+
+# Is this an Asus Eee PC?
+
+if echo "${DEVICE}" | grep -qi "asustek"; then
+	if echo "${KERNEL}" | grep -q eeepc$; then
+		EEEPC=1
+	fi
+fi
+
+if [ "${EEEPC}" = "0" ]; then
+	# nope, bail out now
+
+	exit 0;
+fi
+
+
+do_start () {
+	log_action_begin_msg "Starting $NAME"
+
+
+	# Common settings
+
+	/sbin/sysctl -w dev.wifi0.ledpin=1
+	/sbin/sysctl -w dev.wifi0.softled=1
+
+	/sbin/sysctl -w vm.swappiness=0
+	/sbin/sysctl -w vm.dirty_writeback_centisecs=1500
+
+
+	# Load modules
+
+	# Probing of the network devices will be unnecessary in a
+	# future eeepc kernel version.
+
+	if [ "${SYSTEM}" = "700" -o "${SYSTEM}" = "701" -o "${SYSTEM}" = "900" ]; then
+		/sbin/modprobe ath_pci
+		/sbin/modprobe atl2
+	else
+		/sbin/modprobe rt2860sta
+		/sbin/modprobe atl1e
+	fi
+
+	/sbin/modprobe eeepc_acpi
+	/sbin/modprobe pciehp pciehp_debug=1 pciehp_force=1
+	/sbin/modprobe p4_clockmod
+	/sbin/modprobe i2c-i801
+	/sbin/modprobe asus_eee
+
+	log_action_end_msg $?
+}
+
+
+do_stop () {
+	log_action_begin_msg "Stopping $NAME"
+
+	RUNLEVEL=`runlevel | cut -d ' ' -f 2`
+
+	# If our runlevel is 0, we're actually halting the machine. A bug in
+	# snd_hda_intel prevents the Eee PC from powering off if this module 
+	# is still loaded. So, unload it.
+
+	if [ "${RUNLEVEL}" = "0" ]; then
+		if grep -q snd_hda_intel /proc/modules; then
+			/sbin/modprobe -r snd_hda_intel
+		fi
+	fi
+
+	log_action_end_msg $?
+}
+
+
+case "$1" in
+	start)
+		do_start
+		;;
+	restart|reload|force-reload)
+		do_stop
+		do_start
+		;;
+	stop)
+		do_stop
+		;;
+	*)
+		echo "Usage: $0 [start|stop|restart|reload|force-reload]" >&2
+		exit 3
+		;;
+esac
+
+:
