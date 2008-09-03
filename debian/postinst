@@ -22,4 +22,10 @@ rm -f /etc/acpi/events/asus-mail
 
 invoke-rc.d acpid restart
 
+
+# start eeepc-config
+
+invoke-rc.d eeepc-config start
+
+
 exit 0

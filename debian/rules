@@ -27,6 +27,8 @@ binary-indep: checkroot
 	$(install_script) etc/acpi/*.sh debian/tmp/etc/acpi/
 	$(install_dir) debian/tmp/etc/acpi/events/
 	$(install_file) etc/acpi/events/* debian/tmp/etc/acpi/events/
+	$(install_dir) debian/tmp/etc/default/
+	$(install_file) etc/default/* debian/tmp/etc/default/
 	$(install_dir) debian/tmp/etc/init.d/
 	$(install_script) etc/init.d/* debian/tmp/etc/init.d/
 	$(install_dir) debian/tmp/etc/modprobe.d/
