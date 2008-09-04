@@ -1,0 +1,59 @@
+DMIDEC='/usr/sbin/dmidecode'
+
+VENDOR=`${DMIDEC} -s system-manufacturer`
+PRODUCT=`${DMIDEC} -s system-product-name`
+
+
+# common functions
+
+isModelLessThan ()
+{
+	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
+	if [ ${value} -ge 0 ]; then
+		return 1;
+	fi
+	return 0;
+}
+
+
+isModelLessThanOrEqualTo ()
+{
+	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
+	if [ ${value} -gt 0 ]; then
+		return 1;
+	fi
+	return 0;
+}
+
+
+isModelGreaterThan ()
+{
+	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
+	if [ ${value} -le 0 ]; then
+		return 1;
+	fi
+	return 0;
+}
+
+
+isModelGreaterThanOrEqualTo ()
+{
+	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
+	if [ ${value} -lt 0 ]; then
+		return 1;
+	fi
+	return 0;
+}
+
+
+isModelEqualTo ()
+{
+	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
+	if [ ${value} -ne 0 ]; then
+		return 1;
+	fi
+	return 0;
+}
+
+
+# vim:syntax=sh:noexpandtab

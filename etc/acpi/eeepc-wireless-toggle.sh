@@ -15,6 +15,11 @@ WLAN_PROC="/proc/acpi/asus/wlan"
 WLAN_STATE=`cat ${WLAN_PROC}`
 
 
+# Load shared functions
+
+. /usr/lib/eeepc-config/functions
+
+
 # Load defaults
 
 if [ -e /etc/default/eeepc-config ]; then
@@ -70,14 +75,14 @@ fi
 
 case ${WLAN_STATE} in
 	0)
-		if [ ${PRODUCT} -le 900 ]; then
+		if isModelLessThanOrEqualTo "900a"; then
 			enable_atheros_wireless
 		else
 			enable_ralink_wireless
 		fi
 		;;
 	1)
-		if [ ${PRODUCT} -le 900 ]; then
+		if isModelLessThanOrEqualTo "900a"; then
 			disable_atheros_wireless
 		else
 			disable_ralink_wireless

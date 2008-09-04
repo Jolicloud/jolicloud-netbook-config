@@ -34,6 +34,9 @@ binary-indep: checkroot
 	$(install_dir) debian/tmp/etc/modprobe.d/
 	$(install_file) etc/modprobe.d/* debian/tmp/etc/modprobe.d/
 
+	$(install_dir) debian/tmp/usr/lib/eeepc-config/
+	$(install_file) usr/lib/eeepc-config/* debian/tmp/usr/lib/eeepc-config/
+
 	$(install_dir) debian/tmp/usr/lib/pm-utils/sleep.d/
 	$(install_script) usr/lib/pm-utils/sleep.d/* debian/tmp/usr/lib/pm-utils/sleep.d/
 

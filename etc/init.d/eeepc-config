@@ -27,14 +27,11 @@ DMIDEC='/usr/sbin/dmidecode'
 MODPROBE='/sbin/modprobe'
 SYSCTL='/sbin/sysctl'
 
-VENDOR=`${DMIDEC} -s system-manufacturer`
-PRODUCT=`${DMIDEC} -s system-product-name`
-KERNEL=`uname -r`
 
-EEEPC=0
-
+# Load shared functions
 
 . /lib/lsb/init-functions
+. /usr/lib/eeepc-config/functions
 
 
 # Load defaults
@@ -137,18 +134,24 @@ do_start () {
 	# Probing of the network devices will be unnecessary in a
 	# future eeepc kernel version.
 
-	# The Atheros/Attansic(v2) network drivers are supported by the 
-	# EeePC 900-series and earlier. Ralink/Attansic(v1) drivers are
-	# supported by the EeePC 901-series and later.
+	# The Attansic(v2) (wired) network drivers are supported by the EeePC
+	# 900 and earlier. Attansic(v1) (wired) drivers are supported by the
+	# EeePC 900a and later.
 
-	# FIXME: What hardware does the 900A support?
+	# The Atheros (wireless) network drivers are supported by the 
+	# EeePC 900a and earlier. Ralink (wireless) drivers are supported by
+	# the EeePC 901 and later.
 
-	if [ ${PRODUCT} -le 900 ]; then
-		insert_module ath_pci
+	if isModelLessThanOrEqualTo "900"; then
 		insert_module atl2
 	else
-		insert_module rt2860sta
 		insert_module atl1e
+	fi
+
+	if isModelLessThanOrEqualTo "900a"; then
+		insert_module ath_pci
+	else
+		insert_module rt2860sta
 	fi
 
 
