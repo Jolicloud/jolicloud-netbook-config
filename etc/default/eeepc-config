@@ -1,3 +1,48 @@
 EEEPC_VERBOSE="0"
 EEEPC_CPUFREQ_GOVERNOR="performance"
 EEEPC_CPUFREQ_MIN_FREQ="300000"
+
+
+# EeePC 700-1000: Fn+F2
+#
+# Fn+F2 -- Wireless Toggle
+EEEPC_HOTKEY_WIRELESS_TOGGLE="/etc/acpi/eeepc-wifi-toggle.sh"
+
+# EeePC 700-1000: Fn+F3
+# EeePC 700-1000: Fn+F4
+#
+# Fn+F3 -- LCD Brightness Down
+# Fn+F4 -- LCD Brightness Up
+EEEPC_HOTKEY_LCD_BRIGHTNESS_DOWN=""
+EEEPC_HOTKEY_LCD_BRIGHTNESS_UP=""
+
+# EeePC 700-901: Fn+F5, Fn+F6
+# EeePC 1000:    Fn+F6, Fn+F8
+#
+# Fn+F5 / Fn+F7 -- VGA Toggle
+# Fn+F6 / Fn+F8 -- Task Manager
+EEEPC_HOTKEY_VGA_TOGGLE="/etc/acpi/eeepc-vga-toggle.sh"
+EEEPC_HOTKEY_TASK_MANAGER="su $user -c /usr/bin/gnome-system-monitor &"
+
+# EeePC 700-901: Fn+F7, Fn+F8, Fn+F9
+# EeePC 1000: Fn+F10, Fn+F11, Fn+F12
+#
+# Fn+F7 / Fn+F10 -- Mute Toggle
+# Fn+F8 / Fn+F11 -- Volume Down
+# Fn+F9 / Fn+F12 -- Volume Up
+EEEPC_HOTKEY_MUTE_TOGGLE="acpi_fakekey $KEY_MUTE"
+EEEPC_HOTKEY_VOLUME_DOWN="acpi_fakekey $KEY_VOLUMEDOWN"
+EEEPC_HOTKEY_VOLUME_UP="acpi_fakekey $KEY_VOLUMEUP"
+
+# EeePC 901-1000h: Top Row
+#
+# First hotkey -- Internal Screen Toggle
+# Second hotkey -- Bluetooth Toggle
+# Third hotkey -- CPU Frequency Toggle
+# Fourth hotkey -- Fan Toggle
+EEEPC_HOTKEY_TOPROW1="/etc/acpi/eeepc-lvds-toggle.sh"
+EEEPC_HOTKEY_TOPROW2="/etc/acpi/eeepc-bt-toggle.sh"
+EEEPC_HOTKEY_TOPROW3="/etc/acpi/eeepc-cpufreq-toggle.sh"
+EEEPC_HOTKEY_TOPROW4="/etc/acpi/eeepc-fan-toggle.sh"
+
+# vim:syntax=sh
