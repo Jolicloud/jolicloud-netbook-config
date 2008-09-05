@@ -1,57 +1,80 @@
+#!/bin/bash
+
+######################################################################
+# Main
+######################################################################
+
 DMIDEC='/usr/sbin/dmidecode'
 
 VENDOR=`${DMIDEC} -s system-manufacturer`
 PRODUCT=`${DMIDEC} -s system-product-name`
 
 
-# common functions
+
+######################################################################
+# Functions
+######################################################################
+
+isNetbook ()
+{
+	return 0;
+}
+
+isProduct ()
+{
+	if [ `echo "${PRODUCT}" | grep -qi $1 | wc -l` -eq 0 ]; then
+		return 0
+	fi
+
+	return 1
+}
 
 isModelLessThan ()
 {
-	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
-	if [ ${value} -ge 0 ]; then
-		return 1;
+	if [ "${PRODUCT}" \< "$1" ]; then
+		return 0;
 	fi
-	return 0;
+
+	return 1;
 }
 
 
 isModelLessThanOrEqualTo ()
 {
-	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
-	if [ ${value} -gt 0 ]; then
-		return 1;
+	if [ "${PRODUCT}" \< "$1" -o "${PRODUCT}" = "$1" ]; then
+		return 0;
 	fi
-	return 0;
+
+	return 1;
 }
 
 
 isModelGreaterThan ()
 {
-	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
-	if [ ${value} -le 0 ]; then
-		return 1;
+	if [ "${PRODUCT}" \> "$1" ]; then
+		return 0;
 	fi
-	return 0;
+
+	return 1;
 }
 
 
 isModelGreaterThanOrEqualTo ()
 {
-	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
-	if [ ${value} -lt 0 ]; then
-		return 1;
+	if [ "${PRODUCT}" \> "$1" -o "${PRODUCT}" = "$1" ]; then
+		return 0;
 	fi
-	return 0;
+
+	return 1;
 }
 
 
 isModelEqualTo ()
 {
-	value=`perl -e "print '${PRODUCT}' <=> '$1' || lc '${PRODUCT}' cmp lc '$1'"`
-	if [ ${value} -ne 0 ]; then
+	if [ "${PRODUCT}" = "$1" ]; then
 		return 1;
 	fi
+
 	return 0;
 }
 
