@@ -5,52 +5,93 @@
 ######################################################################
 
 DMIDEC='/usr/sbin/dmidecode'
+KERNEL=`uname -r`
 
 VENDOR=`${DMIDEC} -s system-manufacturer`
-PRODUCT=`${DMIDEC} -s system-product-name`
+PRODNM=`${DMIDEC} -s system-product-name`
+SERIAL=`${DMIDEC} -s system-serial-number`
 
 
 ######################################################################
 # Functions
 ######################################################################
 
-isNetbook ()
+isNetBook ()
 {
+	if echo "${VENDOR}" | grep -qi "asustek"; then
+		#isSerial "eeepc"
+		#if [ $? -eq 1 ]; then
+		#	return 1;
+		#fi
+
+		return 1;
+	fi
+
+	if echo "${VENDOR}" | grep -qi "hewlett-packard"; then
+		isProduct "Tx1000"
+		if [ $? -eq 1 ]; then
+			return 1;
+		fi
+
+		isProduct "Tx1100"
+		if [ $? -eq 1 ]; then
+			return 1;
+		fi
+	fi
+
+	return 0;
+}
+
+isNetBookKernel ()
+{
+	if echo "${KERNEL}" | grep -q eeepc$; then
+		return 1;
+	fi
+
 	return 0;
 }
 
 isProduct ()
 {
-	if [ `echo "${PRODUCT}" | grep -qi $1 | wc -l` -eq 0 ]; then
-		return 0
+	if echo "${PRODNM}" | grep -qi $1; then
+		return 1;
 	fi
 
-	return 1
+	return 0;
+}
+
+isSerial ()
+{
+	if echo "${SERIAL}" | grep -qi $1; then
+		return 1;
+	fi
+
+	return 0;
 }
 
 isModelLessThan ()
 {
-	return `expr "${PRODUCT}" "<" "$1"`;
+	return `expr "${PRODNM}" "<" "$1"`;
 }
 
 isModelLessThanOrEqualTo ()
 {
-	return `expr "${PRODUCT}" "<=" "$1"`;
+	return `expr "${PRODNM}" "<=" "$1"`;
 }
 
 isModelGreaterThan ()
 {
-	return `expr "${PRODUCT}" ">" "$1"`;
+	return `expr "${PRODNM}" ">" "$1"`;
 }
 
 isModelGreaterThanOrEqualTo ()
 {
-	return `expr "${PRODUCT}" ">=" "$1"`;
+	return `expr "${PRODNM}" ">=" "$1"`;
 }
 
 isModelEqualTo ()
 {
-	return `expr "${PRODUCT}" "=" "$1"`;
+	return `expr "${PRODNM}" "=" "$1"`;
 }
 
 

@@ -23,7 +23,6 @@ set -e
 NAME="eeepc-config"
 DESC="Asus Eee PC configuration"
 
-DMIDEC='/usr/sbin/dmidecode'
 MODPROBE='/sbin/modprobe'
 SYSCTL='/sbin/sysctl'
 
@@ -41,17 +40,15 @@ if [ -e /etc/default/eeepc-config ]; then
 fi
 
 
-# Is this an Asus Eee PC?
+# Is this a NetBook PC?
 
-if echo "${VENDOR}" | grep -qi "asustek"; then
-	if echo "${KERNEL}" | grep -q eeepc$; then
-		EEEPC=1
-	fi
+isNetBook
+if [ $? -eq 0 ]; then
+	exit 0;
 fi
 
-if [ "${EEEPC}" = "0" ]; then
-	# nope, bail out now
-
+isNetBookKernel
+if [ $? -eq 0 ]; then
 	exit 0;
 fi
 
