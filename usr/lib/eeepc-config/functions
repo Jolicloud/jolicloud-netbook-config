@@ -10,7 +10,6 @@ VENDOR=`${DMIDEC} -s system-manufacturer`
 PRODUCT=`${DMIDEC} -s system-product-name`
 
 
-
 ######################################################################
 # Functions
 ######################################################################
@@ -31,51 +30,27 @@ isProduct ()
 
 isModelLessThan ()
 {
-	if [ "${PRODUCT}" \< "$1" ]; then
-		return 0;
-	fi
-
-	return 1;
+	return `expr "${PRODUCT}" "<" "$1"`;
 }
-
 
 isModelLessThanOrEqualTo ()
 {
-	if [ "${PRODUCT}" \< "$1" -o "${PRODUCT}" = "$1" ]; then
-		return 0;
-	fi
-
-	return 1;
+	return `expr "${PRODUCT}" "<=" "$1"`;
 }
-
 
 isModelGreaterThan ()
 {
-	if [ "${PRODUCT}" \> "$1" ]; then
-		return 0;
-	fi
-
-	return 1;
+	return `expr "${PRODUCT}" ">" "$1"`;
 }
-
 
 isModelGreaterThanOrEqualTo ()
 {
-	if [ "${PRODUCT}" \> "$1" -o "${PRODUCT}" = "$1" ]; then
-		return 0;
-	fi
-
-	return 1;
+	return `expr "${PRODUCT}" ">=" "$1"`;
 }
-
 
 isModelEqualTo ()
 {
-	if [ "${PRODUCT}" = "$1" ]; then
-		return 1;
-	fi
-
-	return 0;
+	return `expr "${PRODUCT}" "=" "$1"`;
 }
 
 
