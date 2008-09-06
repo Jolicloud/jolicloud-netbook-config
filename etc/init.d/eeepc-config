@@ -157,9 +157,14 @@ do_start () {
 
 	insert_module eeepc_acpi
 	insert_module pciehp pciehp_debug=1 pciehp_force=1
-	insert_module p4_clockmod
 	insert_module i2c-i801
 	insert_module asus_eee
+
+	if isModelLessThanOrEqualTo "900"; then
+		insert_module p4_clockmod
+	else
+		insert_module acpi-cpufreq
+	fi
 
 
 	# Set other configuration options
