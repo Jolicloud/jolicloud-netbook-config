@@ -25,6 +25,7 @@ DESC="Asus Eee PC configuration"
 
 MODPROBE='/sbin/modprobe'
 SYSCTL='/sbin/sysctl'
+AMIXER='/usr/bin/amixer'
 
 
 # Load shared functions
@@ -58,6 +59,15 @@ fi
 # functions
 #
 ######################################################################
+
+set_amixer () {
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		${AMIXER} sset $@
+	else
+		${AMIXER} sset $@ > /dev/null
+	fi
+}
+
 
 set_sysctl () {
 	if [ "${EEEPC_VERBOSE}" = "1" ]; then
@@ -124,6 +134,24 @@ do_start () {
 
 	set_sysctl vm.swappiness=0
 	set_sysctl vm.dirty_writeback_centisecs=1500
+
+
+	# Setup sane mixer levels for the front mic
+
+	if isModelLessThanTo "900"; then
+		# FIXME: What are the 700-series mixer settings?
+	fi
+
+	if isModelEqualTo "900"; then
+		set_amixer "Input Source" "Front Mic"
+		set_amixer "Capture" "80%" "cap" "unmute"
+		set_amixer "Front Mic Boost" "30%" "unmute"
+		set_amixer "Front Mic" "100%" "mute"
+	fi
+
+	if isModelGreaterThan "900"; then
+		# FIXME: What are the 900A and later mixer settings?
+	fi
 
 
 	# Load modules
