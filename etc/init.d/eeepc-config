@@ -62,18 +62,18 @@ fi
 
 set_amixer () {
 	if [ "${EEEPC_VERBOSE}" = "1" ]; then
-		${AMIXER} sset $@
+		${AMIXER} sset "$@"
 	else
-		${AMIXER} sset $@ > /dev/null
+		${AMIXER} sset "$@" > /dev/null
 	fi
 }
 
 
 set_sysctl () {
 	if [ "${EEEPC_VERBOSE}" = "1" ]; then
-		${SYSCTL} -w $@
+		${SYSCTL} -w "$@"
 	else
-		${SYSCTL} -w $1 > /dev/null
+		${SYSCTL} -w "$@" > /dev/null
 	fi
 }
 
@@ -88,24 +88,24 @@ set_sysfs () {
 		echo "$1 = $2"
 	fi
 
-	echo $2 > $1
+	echo "$2" > "$1"
 }
 
 
 insert_module () {
 	if [ "${EEEPC_VERBOSE}" = "1" ]; then
-		${MODPROBE} -v $@
+		${MODPROBE} -v "$@"
 	else
-		${MODPROBE} $@
+		${MODPROBE} "$@"
 	fi
 }
 
 
 remove_module () {
 	if [ "${EEEPC_VERBOSE}" = "1" ]; then
-		${MODPROBE} -r -v $@
+		${MODPROBE} -r -v "$@"
 	else
-		${MODPROBE} -r $@
+		${MODPROBE} -r "$@"
 	fi
 }
 
