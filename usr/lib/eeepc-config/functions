@@ -1,0 +1,98 @@
+#!/bin/bash
+
+######################################################################
+# Main
+######################################################################
+
+DMIDEC='/usr/sbin/dmidecode'
+KERNEL=`uname -r`
+
+VENDOR=`${DMIDEC} -s system-manufacturer`
+PRODNM=`${DMIDEC} -s system-product-name`
+SERIAL=`${DMIDEC} -s system-serial-number`
+
+
+######################################################################
+# Functions
+######################################################################
+
+isNetBook ()
+{
+	if echo "${VENDOR}" | grep -qi "asustek"; then
+		#isSerial "eeepc"
+		#if [ $? -eq 1 ]; then
+		#	return 1;
+		#fi
+
+		return 1;
+	fi
+
+	if echo "${VENDOR}" | grep -qi "hewlett-packard"; then
+		isProduct "Tx1000"
+		if [ $? -eq 1 ]; then
+			return 1;
+		fi
+
+		isProduct "Tx1100"
+		if [ $? -eq 1 ]; then
+			return 1;
+		fi
+	fi
+
+	return 0;
+}
+
+isNetBookKernel ()
+{
+	if echo "${KERNEL}" | grep -q eeepc$; then
+		return 1;
+	fi
+
+	return 0;
+}
+
+isProduct ()
+{
+	if echo "${PRODNM}" | grep -qi $1; then
+		return 1;
+	fi
+
+	return 0;
+}
+
+isSerial ()
+{
+	if echo "${SERIAL}" | grep -qi $1; then
+		return 1;
+	fi
+
+	return 0;
+}
+
+isModelLessThan ()
+{
+	return `expr "${PRODNM}" "<" "$1"`;
+}
+
+isModelLessThanOrEqualTo ()
+{
+	return `expr "${PRODNM}" "<=" "$1"`;
+}
+
+isModelGreaterThan ()
+{
+	return `expr "${PRODNM}" ">" "$1"`;
+}
+
+isModelGreaterThanOrEqualTo ()
+{
+	return `expr "${PRODNM}" ">=" "$1"`;
+}
+
+isModelEqualTo ()
+{
+	return `expr "${PRODNM}" "=" "$1"`;
+}
+
+
+# vim:syntax=sh:noexpandtab

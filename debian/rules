@@ -25,12 +25,18 @@ binary-indep: checkroot
 
 	$(install_dir) debian/tmp/etc/acpi/
 	$(install_script) etc/acpi/*.sh debian/tmp/etc/acpi/
+	$(install_script) etc/acpi/*.py debian/tmp/etc/acpi/
 	$(install_dir) debian/tmp/etc/acpi/events/
 	$(install_file) etc/acpi/events/* debian/tmp/etc/acpi/events/
+	$(install_dir) debian/tmp/etc/default/
+	$(install_file) etc/default/* debian/tmp/etc/default/
 	$(install_dir) debian/tmp/etc/init.d/
 	$(install_script) etc/init.d/* debian/tmp/etc/init.d/
 	$(install_dir) debian/tmp/etc/modprobe.d/
 	$(install_file) etc/modprobe.d/* debian/tmp/etc/modprobe.d/
+
+	$(install_dir) debian/tmp/usr/lib/eeepc-config/
+	$(install_file) usr/lib/eeepc-config/* debian/tmp/usr/lib/eeepc-config/
 
 	$(install_dir) debian/tmp/usr/lib/pm-utils/sleep.d/
 	$(install_script) usr/lib/pm-utils/sleep.d/* debian/tmp/usr/lib/pm-utils/sleep.d/

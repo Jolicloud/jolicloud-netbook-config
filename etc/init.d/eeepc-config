@@ -1,0 +1,258 @@
+#!/bin/sh
+######################################################################
+# eeepc v1.3 by Ferry Hendrikx, (c) 2008
+#
+# System script that automatically configures the appropriate modules
+# depending on the Asus Eee PC model number. 
+#
+# This script will only work on Asus equipment.
+#
+######################################################################
+### BEGIN INIT INFO
+# Provides:          eeepc-config
+# Required-Start:
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0
+# Short-Description: Asus Eee PC configuration
+# Description:
+### END INIT INFO
+
+set -e
+
+NAME="eeepc-config"
+DESC="Asus Eee PC configuration"
+
+MODPROBE='/sbin/modprobe'
+SYSCTL='/sbin/sysctl'
+AMIXER='/usr/bin/amixer'
+
+
+# Load shared functions
+
+. /lib/lsb/init-functions
+. /usr/lib/eeepc-config/functions
+
+
+# Load defaults
+
+if [ -e /etc/default/eeepc-config ]; then
+    . /etc/default/eeepc-config
+fi
+
+
+# Is this a NetBook PC?
+
+isNetBook
+if [ $? -eq 0 ]; then
+	exit 0;
+fi
+
+isNetBookKernel
+if [ $? -eq 0 ]; then
+	exit 0;
+fi
+
+
+######################################################################
+# 
+# functions
+#
+######################################################################
+
+set_amixer () {
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		${AMIXER} sset $@
+	else
+		${AMIXER} sset $@ > /dev/null
+	fi
+}
+
+
+set_sysctl () {
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		${SYSCTL} -w $@
+	else
+		${SYSCTL} -w $1 > /dev/null
+	fi
+}
+
+
+set_sysfs () {
+	if [ ! -e $1 ]; then
+		echo "Error: cannot find $1"
+		exit 1;
+	fi
+
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		echo "$1 = $2"
+	fi
+
+	echo $2 > $1
+}
+
+
+insert_module () {
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		${MODPROBE} -v $@
+	else
+		${MODPROBE} $@
+	fi
+}
+
+
+remove_module () {
+	if [ "${EEEPC_VERBOSE}" = "1" ]; then
+		${MODPROBE} -r -v $@
+	else
+		${MODPROBE} -r $@
+	fi
+}
+
+
+######################################################################
+# 
+# main
+#
+######################################################################
+
+do_start () {
+	log_action_begin_msg "Starting $NAME"
+
+	# Since /var/log may be under tmpfs control, some sub-dirs need to
+	# be created manually during the boot process.
+
+	if [ ! -d /var/log/apt ]; then
+		mkdir -p /var/log/apt
+	fi
+
+
+	# Common settings
+
+	set_sysctl dev.wifi0.ledpin=1
+	set_sysctl dev.wifi0.softled=1
+
+	set_sysctl vm.swappiness=0
+	set_sysctl vm.dirty_writeback_centisecs=1500
+
+
+	# Setup sane mixer levels for the front mic
+
+	if isModelLessThanTo "900"; then
+		# FIXME: What are the 700-series mixer settings?
+	fi
+
+	if isModelEqualTo "900"; then
+		set_amixer "Input Source" "Front Mic"
+		set_amixer "Capture" "80%" "cap" "unmute"
+		set_amixer "Front Mic Boost" "30%" "unmute"
+		set_amixer "Front Mic" "100%" "mute"
+	fi
+
+	if isModelGreaterThan "900"; then
+		# FIXME: What are the 900A and later mixer settings?
+	fi
+
+
+	# Load modules
+
+	# Probing of the network devices will be unnecessary in a
+	# future eeepc kernel version.
+
+	# The Attansic(v2) (wired) network drivers are supported by the EeePC
+	# 900 and earlier. Attansic(v1) (wired) drivers are supported by the
+	# EeePC 900a and later.
+
+	# The Atheros (wireless) network drivers are supported by the 
+	# EeePC 900a and earlier. Ralink (wireless) drivers are supported by
+	# the EeePC 901 and later.
+
+	if isModelLessThanOrEqualTo "900"; then
+		insert_module atl2
+	else
+		insert_module atl1e
+	fi
+
+	if isModelLessThanOrEqualTo "900a"; then
+		insert_module ath_pci
+	else
+		insert_module rt2860sta
+	fi
+
+
+	# Note: special snd_hda_intel module options are handled in
+	# /etc/modprobe.d/eeepc
+
+	insert_module eeepc_acpi
+	insert_module pciehp pciehp_debug=1 pciehp_force=1
+	insert_module i2c-i801
+	insert_module asus_eee
+
+	if isModelLessThanOrEqualTo "900"; then
+		insert_module p4_clockmod
+	else
+		insert_module acpi-cpufreq
+	fi
+
+
+	# Set other configuration options
+
+	if [ "${EEEPC_CPUFREQ_MIN_FREQ}" != "" ]; then
+		for i in `find /sys/devices/system/cpu -name scaling_min_freq`; do
+			set_sysfs $i ${EEEPC_CPUFREQ_MIN_FREQ}
+		done
+	fi
+
+	if [ "${EEEPC_CPUFREQ_GOVERNOR}" != "" ]; then
+		for i in `find /sys/devices/system/cpu -name scaling_governor`; do
+			set_sysfs $i ${EEEPC_CPUFREQ_GOVERNOR}
+		done
+	fi
+
+
+	# finished
+
+	log_action_end_msg $?
+}
+
+
+do_stop () {
+	log_action_begin_msg "Stopping $NAME"
+
+	RUNLEVEL=`runlevel | cut -d ' ' -f 2`
+
+	# If our runlevel is 0, we're actually halting the machine. A bug in
+	# snd_hda_intel prevents the Eee PC from powering off if this module 
+	# is still loaded. So, unload it.
+
+	if [ "${RUNLEVEL}" = "0" ]; then
+		if grep -q snd_hda_intel /proc/modules; then
+			remove_module snd_hda_intel
+		fi
+	fi
+
+
+	# finished
+
+	log_action_end_msg $?
+}
+
+
+case "$1" in
+	start)
+		do_start
+		;;
+	restart|reload|force-reload)
+		do_stop
+		do_start
+		;;
+	stop)
+		do_stop
+		;;
+	*)
+		echo "Usage: $0 [start|stop|restart|reload|force-reload]" >&2
+		exit 3
+		;;
+esac
+
+:
