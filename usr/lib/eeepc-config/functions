@@ -25,74 +25,78 @@ isNetBook ()
 		#	return 1;
 		#fi
 
-		return 1;
+		return 0;
 	fi
 
 	if echo "${VENDOR}" | grep -qi "hewlett-packard"; then
-		isProduct "Tx1000"
-		if [ $? -eq 1 ]; then
-			return 1;
+		if isProduct "Tx1000"; then
+			return 0;
 		fi
 
 		isProduct "Tx1100"
-		if [ $? -eq 1 ]; then
-			return 1;
+		if isProduct "Tx1100"; then
+			return 0;
 		fi
 	fi
 
-	return 0;
+	return 1;
 }
 
 isNetBookKernel ()
 {
 	if echo "${KERNEL}" | grep -q eeepc$; then
-		return 1;
+		return 0;
 	fi
 
-	return 0;
+	return 1;
 }
 
 isProduct ()
 {
 	if echo "${PRODNM}" | grep -qi $1; then
-		return 1;
+		return 0;
 	fi
 
-	return 0;
+	return 1;
 }
 
 isSerial ()
 {
 	if echo "${SERIAL}" | grep -qi $1; then
-		return 1;
+		return 0;
 	fi
 
-	return 0;
+	return 1;
 }
 
 isModelLessThan ()
 {
-	return `expr "${PRODNM}" "<" "$1"`;
+	expr "${PRODNM}" "<" "$1" > /dev/null
+	return $?
 }
 
 isModelLessThanOrEqualTo ()
 {
-	return `expr "${PRODNM}" "<=" "$1"`;
+	expr "${PRODNM}" "<=" "$1" > /dev/null
+	return $?
 }
 
 isModelGreaterThan ()
 {
-	return `expr "${PRODNM}" ">" "$1"`;
+	expr "${PRODNM}" ">" "$1" > /dev/null
+	return $?
 }
 
 isModelGreaterThanOrEqualTo ()
 {
-	return `expr "${PRODNM}" ">=" "$1"`;
+	expr "${PRODNM}" ">=" "$1" > /dev/null
+	return $?
 }
 
 isModelEqualTo ()
 {
-	return `expr "${PRODNM}" "=" "$1"`;
+	expr "${PRODNM}" "=" "$1" > /dev/null
+	return $?
 }
 
 

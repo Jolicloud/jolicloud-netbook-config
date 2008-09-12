@@ -43,13 +43,12 @@ fi
 
 # Is this a NetBook PC?
 
-isNetBook
-if [ $? -eq 0 ]; then
+if ! isNetBook; then
 	exit 0;
 fi
 
-isNetBookKernel
-if [ $? -eq 0 ]; then
+
+if ! isNetBookKernel; then
 	exit 0;
 fi
 
