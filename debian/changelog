@@ -1,4 +1,10 @@
-eeepc-config (1.3-1) unstable; urgency=low
+eeepc-config (1.3-2) hardy-proposed; urgency=low
+
+  * Started 1.3-2 version for bug cleanup
+
+ -- Adam McDaniel <adam@array.org>  Fri, 12 Sep 2008 17:18:19 -0600
+
+eeepc-config (1.3-1) hardy-proposed; urgency=low
 
   * Added significant patches from Adam McDaniel (including fixes, 
     900 series support and changes that allow clean module loading)
