@@ -28,3 +28,15 @@ install snd_hda_intel \
     else \
         /sbin/modprobe --ignore-install snd_hda_intel $CMDLINE_OPTS; \
     fi
+
+
+# Setting the power_save and power_save_controller parameters to the
+# snd_hda_intel module allow the device to shutdown cleanly, even if
+# snd_hda_intel.ko is still loaded.
+#
+# This removes the need to unload the module before shutting down, but only
+# if the EeePC is running BIOS 0802 or later. (Earlier than 0802, this
+# doesn't do anything.)
+
+options snd_hda_intel power_save=10 power_save_controller=Y
+
