@@ -224,8 +224,12 @@ do_stop () {
 	# If our runlevel is 0, we're actually halting the machine. A bug in
 	# snd_hda_intel prevents the Eee PC from powering off if this module 
 	# is still loaded. So, unload it.
+	#
+	# This bug was fixed with BIOS >= 0802. Also, snd_hda_intel must
+	# have power_save & power_save_controller parameters set (see
+	# /etc/modprobe.d/eeepc) before this unloading becomes unnecessary.
 
-	if [ "${RUNLEVEL}" = "0" ]; then
+	if [ "${RUNLEVEL}" = "0" -a "${BIOS}" -lt "0802" ]; then
 		if grep -q snd_hda_intel /proc/modules; then
 			remove_module snd_hda_intel
 		fi

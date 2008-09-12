@@ -10,6 +10,7 @@ KERNEL=`uname -r`
 VENDOR=`${DMIDEC} -s system-manufacturer`
 PRODNM=`${DMIDEC} -s system-product-name`
 SERIAL=`${DMIDEC} -s system-serial-number`
+BIOS=`${DMIDEC} -s bios-version`
 
 
 ######################################################################
