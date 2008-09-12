@@ -138,8 +138,9 @@ do_start () {
 
 	# Setup sane mixer levels for the front mic
 
-	if isModelLessThanTo "900"; then
+	if isModelLessThan "900"; then
 		# FIXME: What are the 700-series mixer settings?
+		echo;
 	fi
 
 	if isModelEqualTo "900"; then
@@ -151,6 +152,7 @@ do_start () {
 
 	if isModelGreaterThan "900"; then
 		# FIXME: What are the 900A and later mixer settings?
+		echo;
 	fi
 
 
