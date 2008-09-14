@@ -6,10 +6,7 @@
 # modules for the Asus Eee PC model.
 ######################################################################
 
-DMIDEC="/usr/sbin/dmidecode"
 MODPROBE="/sbin/modprobe"
-
-PRODUCT=`${DMIDEC} -s system-product-name`
 
 WLAN_PROC="/proc/acpi/asus/wlan"
 WLAN_STATE=`cat ${WLAN_PROC}`

@@ -1,6 +1,6 @@
 #!/bin/bash
 ######################################################################
-# 45eeepc-sound v1.2 By Adam McDaniel, (c) 2008
+# 45eeepc-sound v1.3 By Adam McDaniel, (c) 2008
 #
 # System script that automatically configures the alsa snd_hda_intel 
 # module and forces alsa suspending/resuming, depending on the Asus 
@@ -27,28 +27,39 @@
 #
 ######################################################################
 
+ALSA='/sbin/alsa'
 
-# sanity check
 
-if [ ! -x "/sbin/alsa" -o ! -x "/usr/sbin/dmidecode" ]; then
+# Sanity check
+
+if [ ! -x "${ALSA}" ]; then
 	exit 0;
 fi
 
-VENDOR=`/usr/sbin/dmidecode -s system-manufacturer`
-PRODUCT=`/usr/sbin/dmidecode -s system-product-name`
+
+# Load shared functions
+
+. /usr/lib/eeepc-config/functions
 
 
-# Is this an Asus Eee PC?
+# Load defaults
 
-if ! echo "${VENDOR}" | grep -qi "asustek"; then
+if [ -e /etc/default/eeepc-config ]; then
+    . /etc/default/eeepc-config
+fi
+
+
+# Is this a NetBook PC?
+
+if ! isNetBook; then
 	exit 0;
 fi
 
 
 # Only continue if we're using the EeePC 900
 
-if [ "${PRODUCT}" != "900" ]; then
-	exit 0;
+if ! isModelEqualTo "900"; then
+    exit 0;
 fi
 
 
@@ -93,10 +104,10 @@ set_eeepc900_quirk () {
 case "$1" in
 	hibernate|suspend)
 		set_eeepc900_quirk
-		/sbin/alsa suspend
+		${ALSA} suspend
 		;;
 	thaw|resume)
-		/sbin/alsa resume
+		${ALSA} resume
 		;;
 	*)
 		;;
