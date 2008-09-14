@@ -38,5 +38,5 @@ install snd_hda_intel \
 # if the EeePC is running BIOS 0802 or later. (Earlier than 0802, this
 # doesn't do anything.)
 
-options snd_hda_intel power_save=10 power_save_controller=Y
+options snd_hda_intel power_save=0 power_save_controller=Y
 
