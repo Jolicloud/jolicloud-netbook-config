@@ -63,6 +63,13 @@ if ! isModelEqualTo "900"; then
 fi
 
 
+# Only continue if we're using a kernel earlier than 2.6.27
+
+if expr `uname -r` ">=" "2.6.27"; then
+	exit 0;
+fi
+
+
 ######################################################################
 #
 # functions
@@ -114,3 +121,6 @@ case "$1" in
 esac
 
 exit $?
+
+
+# vim:noexpandtab
