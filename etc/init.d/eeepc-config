@@ -135,6 +135,21 @@ do_start () {
 	set_sysctl vm.dirty_writeback_centisecs=1500
 
 
+	# Load power_save features on snd_hda_intel but only on 2.6.27 and
+	# later. 2.6.24 kernels result in a dead soundcard after the power_save
+	# value has elapsed.
+	#
+	# Enabling power_save with power_save_controller eliminates the need to
+	# reload snd_hda_intel on suspend/resume and remove it on shutdown.
+
+	if expr `uname -r` ">=" "2.6.27" > /dev/null; then
+		[ -e /sys/module/snd_hda_intel/parameters/power_save ] &&
+			echo 10 > /sys/module/snd_hda_intel/parameters/power_save;
+		[ -e /sys/module/snd_hda_intel/parameters/power_save_controller ] &&
+			echo Y > /sys/module/snd_hda_intel/parameters/power_save_controller;
+	fi
+
+
 	# Setup sane mixer levels for the front mic
 
 	if isModelLessThan "900"; then
@@ -230,8 +245,8 @@ do_stop () {
 	# have power_save & power_save_controller parameters set (see
 	# /etc/modprobe.d/eeepc) before this unloading becomes unnecessary.
 
-	if [ "${RUNLEVEL}" = "0" -a "${BIOS}" -lt "0802" ]; then
-		if grep -q snd_hda_intel /proc/modules; then
+	if expr `uname -r` "<" "2.6.27" > /dev/null; then
+		if [ "${RUNLEVEL}" = "0" ]; then
 			remove_module snd_hda_intel
 		fi
 	fi
@@ -261,3 +276,5 @@ case "$1" in
 esac
 
 :
+
+# vim:noexpandtab
