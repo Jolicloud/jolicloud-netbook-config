@@ -1,10 +1,5 @@
 # Configuration file for eeepc-config
 
-# Enable or disable more verbose output of /etc/init.d/eeepc-config and its
-# support files. Useful for debugging.
-
-EEEPC_VERBOSE="0"
-
 
 # If the cpufreq module is loaded (i.e., p4_clockmod) then some overly
 # conservative polices are set on the EeePC. (Such as "ondemand" and

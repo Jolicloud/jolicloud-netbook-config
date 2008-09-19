@@ -23,6 +23,8 @@ set -e
 NAME="eeepc-config"
 DESC="Asus Eee PC configuration"
 
+LOGFILE="/var/log/eeepc-config"
+
 MODPROBE='/sbin/modprobe'
 SYSCTL='/sbin/sysctl'
 AMIXER='/usr/bin/amixer'
@@ -60,52 +62,60 @@ fi
 ######################################################################
 
 set_amixer () {
-	if [ "${EEEPC_VERBOSE}" = "1" ]; then
-		${AMIXER} sset "$@"
-	else
-		${AMIXER} sset "$@" > /dev/null
+	SCONTROL="$1"
+	shift
+
+	echo "${AMIXER} sset \"${SCONTROL}\" $@" >>${LOGFILE}
+
+	if ! ${AMIXER} sget "${SCONTROL}" >/dev/null 2>>${LOGFILE}; then
+		return 0
 	fi
+
+	${AMIXER} sset "${SCONTROL}" "$@" >> ${LOGFILE} 2>&1
+
+	return $?;
 }
 
 
 set_sysctl () {
-	if [ "${EEEPC_VERBOSE}" = "1" ]; then
-		${SYSCTL} -w "$@"
-	else
-		${SYSCTL} -w "$@" > /dev/null
+	echo "${SYSCTL} $1=$2" >>${LOGFILE}
+
+	if ! ${SYSCTL} "$1" 2>>${LOGFILE} >/dev/null; then
+		return 0;
 	fi
+
+	${SYSCTL} -w $1=$2 >> ${LOGFILE}
+
+	return 0;
 }
 
 
 set_sysfs () {
 	if [ ! -e $1 ]; then
-		echo "Error: cannot find $1"
-		exit 1;
+		echo "Error: cannot find $1" >> ${LOGFILE}
+		return 0;
 	fi
 
-	if [ "${EEEPC_VERBOSE}" = "1" ]; then
-		echo "$1 = $2"
-	fi
+	echo "$1 = $2" >> ${LOGFILE}
+	echo "$2" > "$1" 2>> ${LOGFILE}
 
-	echo "$2" > "$1"
+	return 0
 }
 
 
 insert_module () {
-	if [ "${EEEPC_VERBOSE}" = "1" ]; then
-		${MODPROBE} -v "$@"
-	else
-		${MODPROBE} "$@"
+	if ! ${MODPROBE} -v "$1" >> ${LOGFILE} 2>&1; then
+		echo "Cannot load module $1" | tee -a ${LOGFILE}
 	fi
+
+	return 0
 }
 
 
 remove_module () {
-	if [ "${EEEPC_VERBOSE}" = "1" ]; then
-		${MODPROBE} -r -v "$@"
-	else
-		${MODPROBE} -r "$@"
-	fi
+	${MODPROBE} -r -v "$@" >> ${LOGFILE} 2>&1
+
+	return 0
 }
 
 
@@ -128,11 +138,11 @@ do_start () {
 
 	# Common settings
 
-	set_sysctl dev.wifi0.ledpin=1
-	set_sysctl dev.wifi0.softled=1
+	set_sysctl dev.wifi0.ledpin 1
+	set_sysctl dev.wifi0.softled 1
 
-	set_sysctl vm.swappiness=0
-	set_sysctl vm.dirty_writeback_centisecs=1500
+	set_sysctl vm.swappiness 0
+	set_sysctl vm.dirty_writeback_centisecs 1500
 
 
 	# Load power_save features on snd_hda_intel but only on 2.6.27 and
@@ -152,22 +162,10 @@ do_start () {
 
 	# Setup sane mixer levels for the front mic
 
-	if isModelLessThan "900"; then
-		# FIXME: What are the 700-series mixer settings?
-		echo;
-	fi
-
-	if isModelEqualTo "900"; then
-		set_amixer "Input Source" "Front Mic"
-		set_amixer "Capture" "80%" "cap" "unmute"
-		set_amixer "Front Mic Boost" "30%" "unmute"
-		set_amixer "Front Mic" "100%" "mute"
-	fi
-
-	if isModelGreaterThan "900"; then
-		# FIXME: What are the 900A and later mixer settings?
-		echo;
-	fi
+	set_amixer "Input Source" "Front Mic"
+	set_amixer "Capture" "80%" "cap" "unmute"
+	set_amixer "Front Mic Boost" "30%" "unmute"
+	set_amixer "Front Mic" "100%" "mute"
 
 
 	# Load modules
