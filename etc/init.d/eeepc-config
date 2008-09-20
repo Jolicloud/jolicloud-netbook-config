@@ -128,6 +128,10 @@ remove_module () {
 do_start () {
 	log_action_begin_msg "Starting $NAME"
 
+	echo "Starting /etc/init.d/eeepc-config \"start\": " > ${LOGFILE}
+	date >> ${LOGFILE}
+	echo >> ${LOGFILE}
+
 	# Since /var/log may be under tmpfs control, some sub-dirs need to
 	# be created manually during the boot process.
 
@@ -225,6 +229,10 @@ do_start () {
 
 
 	# finished
+
+	echo "Finished /etc/init.d/eeepc-config \"start\": " >> ${LOGFILE}
+	date >> ${LOGFILE}
+	echo >> ${LOGFILE}
 
 	log_action_end_msg $?
 }
