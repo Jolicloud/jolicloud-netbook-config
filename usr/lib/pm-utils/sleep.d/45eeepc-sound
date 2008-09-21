@@ -65,7 +65,7 @@ fi
 
 # Only continue if we're using a kernel earlier than 2.6.27
 
-if expr `uname -r` ">=" "2.6.27"; then
+if ! isKernelEarlierThan "2.6.27"; then
 	exit 0;
 fi
 

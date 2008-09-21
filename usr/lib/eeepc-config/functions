@@ -44,7 +44,7 @@ isNetBook ()
 
 isNetBookKernel ()
 {
-	if echo "${KERNEL}" | grep -q eeepc$; then
+	if isKernelNetBook; then
 		return 0;
 	fi
 
@@ -96,6 +96,62 @@ isModelGreaterThanOrEqualTo ()
 isModelEqualTo ()
 {
 	expr "${PRODNM}" "=" "$1" > /dev/null
+	return $?
+}
+
+isKernelNetBook ()
+{
+	if isKernelEeePC; then
+		return 0;
+	fi
+	if isKernelEeePCAtom; then
+		return 0;
+	fi
+
+	return 1;
+}
+
+isKernelEeePC ()
+{
+	if echo "${KERNEL}" | grep -q eeepc$; then
+		return 0;
+	fi
+
+	return 1;
+}
+
+isKernelEeePCAtom ()
+{
+	return 1;
+}
+
+isKernelEarlierThan ()
+{
+	expr "${KERNEL}" "<" "$1" > /dev/null
+	return $?
+}
+
+isKernelEarlierThanOrEqualTo ()
+{
+	expr "${KERNEL}" "<=" "$1" > /dev/null
+	return $?
+}
+
+isKernelLaterThan ()
+{
+	expr "${KERNEL}" ">" "$1" > /dev/null
+	return $?
+}
+
+isKernelLaterThanOrEqualTo ()
+{
+	expr "${KERNEL}" ">=" "$1" > /dev/null
+	return $?
+}
+
+isKernelEqualTo ()
+{
+	expr "${KERNEL}" "=" "$1" > /dev/null
 	return $?
 }
 
