@@ -7,6 +7,7 @@
 ######################################################################
 
 MODPROBE="/sbin/modprobe"
+IFCONFIG="/sbin/ifconfig"
 
 WLAN_PROC="/proc/acpi/asus/wlan"
 WLAN_STATE=`cat ${WLAN_PROC}`
@@ -32,13 +33,12 @@ fi
 
 disable_atheros_wireless () {
 	if isKernelLaterThan "2.6.27"; then
-		ifconfig wlan0 down
+		${IFCONFIG} wlan0 down
 		${MODPROBE} -r ath5k
 	else
-		ifconfig ath0 down
+		${IFCONFIG} ath0 down
 		${MODPROBE} -r ath_pci
 	fi
-	${MODPROBE} -r pciehp
 	sleep 1
 
 	echo 0 > ${WLAN_PROC}
@@ -48,7 +48,10 @@ disable_atheros_wireless () {
 
 
 enable_atheros_wireless () {
+	${MODPROBE} -r pciehp
+	sleep 1
 	${MODPROBE} pciehp pciehp_force=1
+	sleep 1
 	if isKernelLaterThan "2.6.27"; then
 		${MODPROBE} ath5k
 	else
@@ -61,9 +64,9 @@ enable_atheros_wireless () {
 
 	# validate that it came back up
 	if isKernelLaterThan "2.6.27"; then
-		/sbin/ifconfig wlan0 > /dev/null 2> /dev/null
+		${IFCONFIG} wlan0 > /dev/null 2> /dev/null
 	else
-		/sbin/ifconfig ath0 > /dev/null 2> /dev/null
+		${IFCONFIG} ath0 > /dev/null 2> /dev/null
 	fi
 
 	return $?
@@ -71,9 +74,8 @@ enable_atheros_wireless () {
 
 
 disable_ralink_wireless () {
-	ifconfig ra0 down
+	${IFCONFIG} ra0 down
 	${MODPROBE} -r rt2860sta
-	${MODPROBE} -r pciehp
 	sleep 1
 
 	echo 0 > ${WLAN_PROC}
@@ -83,7 +85,10 @@ disable_ralink_wireless () {
 
 
 enable_ralink_wireless () {
+	${MODPROBE} -r pciehp
+	sleep 1
 	${MODPROBE} pciehp pciehp_force=1
+	sleep 1
 	${MODPROBE} rt2860sta
 	sleep 1
 
@@ -91,7 +96,7 @@ enable_ralink_wireless () {
 	sleep 1
 
 	# validate that it came back up
-	/sbin/ifconfig ra0 > /dev/null 2> /dev/null
+	${IFCONFIG} ra0 > /dev/null 2> /dev/null
 
 	return $?
 }
@@ -125,7 +130,6 @@ case ${WLAN_STATE} in
 		;;
 	1)
 		/etc/acpi/eeepc-wifi-notify.py off
-		echo "bar?"
 		if isModelLessThanOrEqualTo "900a"; then
 			disable_atheros_wireless
 		else
