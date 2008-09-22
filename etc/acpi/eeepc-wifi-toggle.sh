@@ -9,9 +9,6 @@
 MODPROBE="/sbin/modprobe"
 IFCONFIG="/sbin/ifconfig"
 
-WLAN_PROC="/proc/acpi/asus/wlan"
-WLAN_STATE=`cat ${WLAN_PROC}`
-
 
 # Load shared functions
 
@@ -23,6 +20,23 @@ WLAN_STATE=`cat ${WLAN_PROC}`
 if [ -e /etc/default/eeepc-config ]; then
     . /etc/default/eeepc-config
 fi
+
+
+# The location of our wlan device attribute differs depending the module.
+# Here we validate the older module (eeepc-acpi) location, and the newer
+# module (eeepc-laptop) location.
+
+EEEPC_ACPI_DIR="/proc/acpi/asus"
+EEEPC_LAPTOP_DIR="/sys/devices/platform/eeepc"
+WLAN_PROC=""
+
+[ -d "${EEEPC_ACPI_DIR}" ] && WLAN_PROC="${EEEPC_ACPI_DIR}/wlan"
+[ -d "${EEEPC_LAPTOP_DIR}" ] && WLAN_PROC="${EEEPC_LAPTOP_DIR}/wlan"
+if [ ! -e "${WLAN_PROC}" ]; then
+	exit 1;
+fi
+
+WLAN_STATE=`cat ${WLAN_PROC}`
 
 
 ######################################################################

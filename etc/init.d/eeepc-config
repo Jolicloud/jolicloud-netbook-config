@@ -150,6 +150,9 @@ do_start () {
 	#
 	# Enabling power_save with power_save_controller eliminates the need to
 	# reload snd_hda_intel on suspend/resume and remove it on shutdown.
+	#
+	# Note: Other snd_hda_intel module options are now handled directly in
+	# /etc/modprobe.d/eeepc
 
 	if isKernelLaterThanOrEqualTo "2.6.27"; then
 		[ -e /sys/module/snd_hda_intel/parameters/power_save ] &&
@@ -196,11 +199,12 @@ do_start () {
 		insert_module rt2860sta
 	fi
 
+	if isKernelLaterThan "2.6.27"; then
+		insert_module eeepc_laptop
+	else
+		insert_module eeepc_acpi
+	fi
 
-	# Note: special snd_hda_intel module options are handled in
-	# /etc/modprobe.d/eeepc
-
-	insert_module eeepc_acpi
 	insert_module pciehp pciehp_force=1
 	insert_module i2c-i801
 	insert_module asus_eee
