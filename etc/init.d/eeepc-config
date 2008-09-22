@@ -187,7 +187,11 @@ do_start () {
 	fi
 
 	if isModelLessThanOrEqualTo "900a"; then
-		insert_module ath_pci
+		if isKernelLaterThan "2.6.27"; then
+			insert_module ath5k
+		else
+			insert_module ath_pci
+		fi
 	else
 		insert_module rt2860sta
 	fi
@@ -197,7 +201,7 @@ do_start () {
 	# /etc/modprobe.d/eeepc
 
 	insert_module eeepc_acpi
-	insert_module pciehp pciehp_debug=1 pciehp_force=1
+	insert_module pciehp pciehp_force=1
 	insert_module i2c-i801
 	insert_module asus_eee
 

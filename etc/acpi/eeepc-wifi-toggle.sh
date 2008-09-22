@@ -31,9 +31,16 @@ fi
 ######################################################################
 
 disable_atheros_wireless () {
-	ifconfig ath0 down
-	${MODPROBE} -r ath_pci
+	if isKernelLaterThan "2.6.27"; then
+		ifconfig wlan0 down
+		${MODPROBE} -r ath5k
+	else
+		ifconfig ath0 down
+		${MODPROBE} -r ath_pci
+	fi
+	${MODPROBE} -r pciehp
 	sleep 1
+
 	echo 0 > ${WLAN_PROC}
 
 	return 0
@@ -41,13 +48,23 @@ disable_atheros_wireless () {
 
 
 enable_atheros_wireless () {
-	${MODPROBE} ath_pci
+	${MODPROBE} pciehp pciehp_force=1
+	if isKernelLaterThan "2.6.27"; then
+		${MODPROBE} ath5k
+	else
+		${MODPROBE} ath_pci
+	fi
 	sleep 1
+
 	echo 1 > ${WLAN_PROC}
+	sleep 1
 
 	# validate that it came back up
-	sleep 1
-	/sbin/ifconfig ath0 > /dev/null 2> /dev/null
+	if isKernelLaterThan "2.6.27"; then
+		/sbin/ifconfig wlan0 > /dev/null 2> /dev/null
+	else
+		/sbin/ifconfig ath0 > /dev/null 2> /dev/null
+	fi
 
 	return $?
 }
@@ -56,7 +73,9 @@ enable_atheros_wireless () {
 disable_ralink_wireless () {
 	ifconfig ra0 down
 	${MODPROBE} -r rt2860sta
+	${MODPROBE} -r pciehp
 	sleep 1
+
 	echo 0 > ${WLAN_PROC}
 
 	return 0
@@ -64,12 +83,14 @@ disable_ralink_wireless () {
 
 
 enable_ralink_wireless () {
+	${MODPROBE} pciehp pciehp_force=1
 	${MODPROBE} rt2860sta
 	sleep 1
+
 	echo 1 > ${WLAN_PROC}
+	sleep 1
 
 	# validate that it came back up
-	sleep 1
 	/sbin/ifconfig ra0 > /dev/null 2> /dev/null
 
 	return $?
@@ -112,3 +133,5 @@ case ${WLAN_STATE} in
 		fi
 		;;
 esac
+
+# vim:noexpandtab
