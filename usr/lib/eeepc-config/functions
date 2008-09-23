@@ -71,32 +71,54 @@ isSerial ()
 
 isModelLessThan ()
 {
-	expr "${PRODNM}" "<" "$1" > /dev/null
-	return $?
+	perl -e "exit ( '${PRODNM}' <=> '$1' || lc '${PRODNM}' cmp lc '$1' )"
+	# Perl returns 255 if $1 is less than ${PRODNUM}
+	if [ $? -eq 255 ]; then
+		return 0
+	fi
+	return 1
 }
 
 isModelLessThanOrEqualTo ()
 {
-	expr "${PRODNM}" "<=" "$1" > /dev/null
-	return $?
+	perl -e "exit ( '${PRODNM}' <=> '$1' || lc '${PRODNM}' cmp lc '$1' )"
+	# Perl returns 255 if $1 is less than ${PRODNUM}, 0 if both values are
+	# the same.
+	if [ $? -eq 255 -o $? -eq 0 ]; then
+		return 0
+	fi
+	return 1
 }
 
 isModelGreaterThan ()
 {
-	expr "${PRODNM}" ">" "$1" > /dev/null
-	return $?
+	perl -e "exit ( '${PRODNM}' <=> '$1' || lc '${PRODNM}' cmp lc '$1' )"
+	# Perl returns 1 if $1 is greater than $PRODNM
+	if [ $? -eq 1 ]; then
+		return 0
+	fi
+	return 1
 }
 
 isModelGreaterThanOrEqualTo ()
 {
-	expr "${PRODNM}" ">=" "$1" > /dev/null
-	return $?
+	perl -e "exit ( '${PRODNM}' <=> '$1' || lc '${PRODNM}' cmp lc '$1' )"
+	# Perl returns 1 if $1 is greater than $PRODNM, 0 if both values are
+	# the same.
+	if [ $? -eq 1 -o $? -eq 0 ]; then
+		return 0
+	fi
+	return 1
 }
 
 isModelEqualTo ()
 {
-	expr "${PRODNM}" "=" "$1" > /dev/null
-	return $?
+	perl -e "exit ( '${PRODNM}' <=> '$1' || lc '${PRODNM}' cmp lc '$1' )"
+	# Perl returns 0 if $1 and $PRODNM are the same.
+	if [ $? -eq 0 ]; then
+		return 0
+	fi
+	return 1
 }
 
 isKernelNetBook ()
