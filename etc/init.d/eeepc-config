@@ -60,6 +60,10 @@ set_amixer () {
 	SCONTROL="$1"
 	shift
 
+	# Intrepid's amixer needs to be instructed which card use, even there's
+	# only one sound card.
+	AMIXER="${AMIXER} -c 0"
+
 	echo "${AMIXER} sset \"${SCONTROL}\" $@" >>${LOGFILE}
 
 	if ! ${AMIXER} sget "${SCONTROL}" >/dev/null 2>>${LOGFILE}; then
