@@ -7,7 +7,10 @@ Standards-Version: 3.6.1.0
 Package: eeepc-config
 Architecture: all
 Depends: dmidecode, perl
-Recommends: linux-eeepc, cpufrequtils
+Recommends: linux-image-eeepc, cpufrequtils
+Conflicts: eee-osd
+Provides: eee-osd
+Replaces: eee-osd
 Description: Asus Eee PC configuration
  This package provides automatic configuration of your Ubuntu Linux
  system for the Asus Eee PC. Kernel module configuration takes place
