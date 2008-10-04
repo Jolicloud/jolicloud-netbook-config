@@ -27,10 +27,12 @@ if __name__ == '__main__':
 		n = pynotify.Notification("WLAN", "Your wireless adapter is being <b><span color='red'>disabled</span></b>. ", uri)
 	elif sys.argv[1] == "on":
 		n = pynotify.Notification("WLAN", "Your wireless adapter is being <b><span color='green'>enabled</span></b>. ", uri)
+	elif sys.argv[1] == "retry":
+		n = pynotify.Notification("WLAN", "Please wait. Your wireless adapter is being <b><span color='orange'>restarted</span></b>. ", uri)
 	elif sys.argv[1] == "fail":
 		n = pynotify.Notification("WLAN", "Your wireless adapter has <b><span color='red'>failed</span></b> to return. Please reboot. ", uri)
 	else:
-		print "USAGE: " + sys.argv[0] + " (on|off)"
+		print "USAGE: " + sys.argv[0] + " (on|off|retry)"
 		sys.exit(1)
 		
 	n.set_timeout(3000)

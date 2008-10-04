@@ -74,7 +74,9 @@ enable_atheros_wireless () {
 	sleep 1
 
 	echo 1 > ${WLAN_PROC}
-	sleep 1
+
+	# Sometimes it takes up to 10 seconds for the driver to kick back in
+	sleep 10
 
 	# validate that it came back up
 	if isKernelLaterThan "2.6.27"; then
@@ -116,6 +118,38 @@ enable_ralink_wireless () {
 }
 
 
+disable_wireless () {
+	if isModelLessThanOrEqualTo "900a"; then
+		enable_atheros_wireless
+	else
+		enable_ralink_wireless
+	fi
+}
+
+
+disable_wireless () {
+	if isModelLessThanOrEqualTo "900a"; then
+		disable_atheros_wireless
+	else
+		disable_ralink_wireless
+	fi
+
+	return $?
+}
+
+
+
+enable_wireless () {
+	if isModelLessThanOrEqualTo "900a"; then
+		enable_atheros_wireless
+	else
+		enable_ralink_wireless
+	fi
+
+	return $?
+}
+
+
 ######################################################################
 #
 # main
@@ -133,22 +167,25 @@ fi
 case ${WLAN_STATE} in
 	0)
 		/etc/acpi/eeepc-wifi-notify.py on
-		if isModelLessThanOrEqualTo "900a"; then
-			enable_atheros_wireless
-		else
-			enable_ralink_wireless
+		enable_wireless
+		if [ $? -ne 0 ]; then
+			/etc/acpi/eeepc-wifi-notify.py retry
+			disable_wireless
+			enable_wireless
 		fi
 		if [ $? -ne 0 ]; then
+			/etc/acpi/eeepc-wifi-notify.py retry
+			disable_wireless
+			enable_wireless
+		fi
+		if [ $? -ne 0 ]; then
+			disable_wireless
 			/etc/acpi/eeepc-wifi-notify.py fail
 		fi
 		;;
 	1)
 		/etc/acpi/eeepc-wifi-notify.py off
-		if isModelLessThanOrEqualTo "900a"; then
-			disable_atheros_wireless
-		else
-			disable_ralink_wireless
-		fi
+		disable_wireless
 		;;
 esac
 
