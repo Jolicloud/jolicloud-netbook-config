@@ -36,6 +36,12 @@ if [ ! -e "${WLAN_PROC}" ]; then
 	exit 1;
 fi
 
+# Do not run on 2.6.27 or later eeepc-laptop's rfkill feature will handle
+# wireless switching for us.
+if isKernelLaterThan "2.6.27";
+	exit 0;
+fi
+
 WLAN_STATE=`cat ${WLAN_PROC}`
 
 
