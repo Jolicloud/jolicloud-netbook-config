@@ -107,10 +107,16 @@ disable_ralink_wireless () {
 
 
 enable_ralink_wireless () {
-	${MODPROBE} -r pciehp
-	sleep 1
-	${MODPROBE} pciehp pciehp_force=1
-	sleep 1
+
+# Restarting pciehp on rt2860 hardware results in wierd error messages.
+# Users have reported that it shouldn't be necessary.
+# http://forum.eeeuser.com/viewtopic.php?pid=403637#p403637
+
+#	${MODPROBE} -r pciehp
+#	sleep 1
+#	${MODPROBE} pciehp pciehp_force=1 pciehp_poll_mode=1
+#	sleep 1
+
 	${MODPROBE} rt2860sta
 	sleep 1
 
