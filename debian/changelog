@@ -1,4 +1,12 @@
-eeepc-config (1.3-4) UNRELEASED; urgency=low
+eeepc-config (1.3-4) hardy-proposed; urgency=low
+
+  * Added realtek (rtl8187) wireless toggle support.
+  * Updated control file to replace eee-osd package due to conflict
+  * Added code to retry the wireless when enabling it. This gives the driver a
+  * Do not run eeepc-wifi-toggle code on kernels 2.6.27 or later.
+  * Restarting pciehp on rt2860 hardware results in wierd error messages.
+
+ -- Adam McDaniel <adam@array.org>  Thu, 09 Oct 2008 20:56:47 -0600
 
 eeepc-config (1.3-3) UNRELEASED; urgency=low
 
