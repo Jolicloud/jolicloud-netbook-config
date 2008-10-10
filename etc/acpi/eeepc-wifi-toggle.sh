@@ -51,6 +51,34 @@ WLAN_STATE=`cat ${WLAN_PROC}`
 #
 ######################################################################
 
+
+disable_realtek_wireless () {
+	${IFCONFIG} wlan0 down
+	${MODPROBE} -r rtl8187se
+	sleep 1
+
+	echo 0 > ${WLAN_PROC}
+
+	return 0
+}
+
+
+enable_realtek_wireless () {
+	${MODPROBE} rtl8187se
+	sleep 1
+
+	echo 1 > ${WLAN_PROC}
+
+	# Sometimes it takes up to 10 seconds for the driver to kick back in
+	sleep 10
+
+	# validate that it came back up
+	${IFCONFIG} wlan0 > /dev/null 2> /dev/null
+
+	return $?
+}
+
+
 disable_atheros_wireless () {
 	if isKernelLaterThan "2.6.27"; then
 		${IFCONFIG} wlan0 down
@@ -131,7 +159,9 @@ enable_ralink_wireless () {
 
 
 disable_wireless () {
-	if isModelLessThanOrEqualTo "900a"; then
+	if isModelEqualTo "700SE"; then
+		enable_realtek_wireless
+	elif isModelLessThanOrEqualTo "900a"; then
 		enable_atheros_wireless
 	else
 		enable_ralink_wireless
@@ -140,7 +170,9 @@ disable_wireless () {
 
 
 disable_wireless () {
-	if isModelLessThanOrEqualTo "900a"; then
+	if isModelEqualTo "700SE"; then
+		disable_realtek_wireless
+	elif isModelLessThanOrEqualTo "900a"; then
 		disable_atheros_wireless
 	else
 		disable_ralink_wireless
