@@ -1,19 +1,17 @@
-Source: eeepc-config
+Source: jolicloud-netbook-config
 Section: misc
 Priority: optional
-Maintainer: Ferry Hendrikx <ferry.hendrikx@gmail.com>
+Maintainer: Adam McDaniel <adam@jolicloud.org>
 Standards-Version: 3.6.1.0
 
-Package: eeepc-config
+Package: jolicloud-netbook-config
 Architecture: all
 Depends: dmidecode, perl
-Recommends: linux-image-eeepc, cpufrequtils
+Recommends: linux-image-jolicloud | linux-image-jolicloud-atom, cpufrequtils
 Conflicts: eee-osd
 Provides: eee-osd
-Replaces: eee-osd
-Description: Asus Eee PC configuration
- This package provides automatic configuration of your Ubuntu Linux
- system for the Asus Eee PC. Kernel module configuration takes place
- at boot. However, this step checks for genuine ASUSTeK equipment and
- assumes that you are running the http://www.array.org/ubuntu Asus
- Eee PC custom kernel.
+Replaces: eee-osd, eeepc-config
+Description: Jolicloud Netbook configuration
+ This package provides automatic configuration of your Jolicloud Linux
+ system for various netbooks. Kernel module configuration takes place
+ at boot. 
