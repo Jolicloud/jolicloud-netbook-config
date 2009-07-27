@@ -23,26 +23,16 @@ binary-indep: checkroot
 	$(install_script) debian/postinst debian/tmp/DEBIAN/
 	$(install_script) debian/postrm debian/tmp/DEBIAN/
 
-	$(install_dir) debian/tmp/etc/acpi/
-	$(install_script) etc/acpi/*.sh debian/tmp/etc/acpi/
-	$(install_script) etc/acpi/*.py debian/tmp/etc/acpi/
-	$(install_dir) debian/tmp/etc/acpi/events/
-	$(install_file) etc/acpi/events/* debian/tmp/etc/acpi/events/
 	$(install_dir) debian/tmp/etc/default/
 	$(install_file) etc/default/* debian/tmp/etc/default/
 	$(install_dir) debian/tmp/etc/init.d/
 	$(install_script) etc/init.d/* debian/tmp/etc/init.d/
-	$(install_dir) debian/tmp/etc/modprobe.d/
-	$(install_file) etc/modprobe.d/* debian/tmp/etc/modprobe.d/
 
 	$(install_dir) debian/tmp/usr/bin/
 	$(install_script) usr/bin/* debian/tmp/usr/bin/
 
 	$(install_dir) debian/tmp/usr/lib/jolicloud-netbook-config/
 	$(install_file) usr/lib/jolicloud-netbook-config/* debian/tmp/usr/lib/jolicloud-netbook-config/
-
-	$(install_dir) debian/tmp/usr/lib/pm-utils/sleep.d/
-	$(install_script) usr/lib/pm-utils/sleep.d/* debian/tmp/usr/lib/pm-utils/sleep.d/
 
 	$(install_dir) debian/tmp/usr/share/doc/jolicloud-netbook-config/
 	$(install_file) debian/changelog debian/tmp/usr/share/doc/jolicloud-netbook-config/changelog.Debian
