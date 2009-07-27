@@ -28,7 +28,7 @@ LOGFILE="/var/log/jolicloud-netbook-config"
 
 MODPROBE='/sbin/modprobe'
 SYSCTL='/sbin/sysctl'
-AMIXER='/usr/bin/amixer'
+AMIXER='/usr/bin/amixer -c 0'
 
 
 # Load shared functions
@@ -61,16 +61,12 @@ set_amixer () {
 	SCONTROL="$1"
 	shift
 
-	# Intrepid's amixer needs to be instructed which card use, even there's
-	# only one sound card.
-	AMIXER="${AMIXER} -c 0"
-
-	echo "${AMIXER} sset \"${SCONTROL}\" $@" >>${LOGFILE}
-
 	if ! ${AMIXER} sget "${SCONTROL}" >/dev/null 2>>${LOGFILE}; then
+		echo "amixer \"${SCONTROL}\" not found" >>${LOGFILE}
 		return 0
 	fi
 
+	echo "${AMIXER} sset \"${SCONTROL}\" $@" >>${LOGFILE}
 	${AMIXER} sset "${SCONTROL}" "$@" >> ${LOGFILE} 2>&1
 
 	return $?;
@@ -168,10 +164,13 @@ do_start () {
 	# Setup sane mixer levels for the front mic
 	#
 
+	set_amixer "LineOut" "100%" "unmute"
 	set_amixer "Input Source" "Front Mic"
-	set_amixer "Capture" "80%" "cap" "unmute"
+	set_amixer "Capture" "90%" "cap" "unmute"
 	set_amixer "Front Mic Boost" "30%" "unmute"
 	set_amixer "Front Mic" "100%" "mute"
+	set_amixer "Mic Boost" "30%" "unmute"
+	set_amixer "Mic" "100%" "mute"
 
 
 	#
