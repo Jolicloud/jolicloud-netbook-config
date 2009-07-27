@@ -1,6 +1,7 @@
 #!/bin/sh
 ######################################################################
 # eeepc-config by F.Hendrikx, (c) 2008
+# jolicloud-netbook-config by Adam McDaniel, (c) 2009
 # postinst script
 ######################################################################
 set -e
@@ -8,12 +9,12 @@ set -e
 
 # add eeepc-config init.d script
 
-if [ -x "/etc/init.d/eeepc-config" ]; then
-	update-rc.d eeepc-config start 15 2 3 4 5 . stop 85 0 . || exit $?
+if [ -x "/etc/init.d/jolicloud-netbook-config" ]; then
+	update-rc.d joilcloud-netbook-config start 15 2 3 4 5 . stop 85 0 . || exit $?
 fi
 
 
-# remove asus mail ACPI event
+# remove asus mail ACPI event, causes conflict with some hotkeys
 
 rm -f /etc/acpi/events/asus-mail
 
@@ -25,7 +26,7 @@ invoke-rc.d acpid restart
 
 # start eeepc-config
 
-invoke-rc.d eeepc-config start
+invoke-rc.d jolicloud-netbook-config start
 
 
 exit 0

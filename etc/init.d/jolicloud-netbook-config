@@ -1,6 +1,7 @@
 #!/bin/sh
 ######################################################################
-# eeepc v1.3 by Ferry Hendrikx, (c) 2008
+# eeepc-config by Ferry Hendrikx, (c) 2008
+# jolicloud-netbok-config by Adam McDaniel, (c) 2009
 #
 # System script that automatically configures the appropriate modules
 # depending on the Asus Eee PC model number. 
@@ -9,21 +10,21 @@
 #
 ######################################################################
 ### BEGIN INIT INFO
-# Provides:          eeepc-config
+# Provides:          jolicloud-netbook-config
 # Required-Start:
 # Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0
-# Short-Description: Asus Eee PC configuration
+# Short-Description: Jolicloud netbook configuration
 # Description:
 ### END INIT INFO
 
 set -e
 
-NAME="eeepc-config"
-DESC="Asus Eee PC configuration"
+NAME="jolicloud-netbook-config"
+DESC="Jolicloud netbook configuration"
 
-LOGFILE="/var/log/eeepc-config"
+LOGFILE="/var/log/jolicloud-netbook-config"
 
 MODPROBE='/sbin/modprobe'
 SYSCTL='/sbin/sysctl'
@@ -33,13 +34,13 @@ AMIXER='/usr/bin/amixer'
 # Load shared functions
 
 . /lib/lsb/init-functions
-. /usr/lib/eeepc-config/functions
+. /usr/lib/jolicloud-netbook-config/functions
 
 
 # Load defaults
 
-if [ -e /etc/default/eeepc-config ]; then
-    . /etc/default/eeepc-config
+if [ -e /etc/default/jolicloud-netbook-config ]; then
+    . /etc/default/jolicloud-netbook-config
 fi
 
 
@@ -127,7 +128,7 @@ remove_module () {
 do_start () {
 	log_action_begin_msg "Starting $NAME"
 
-	echo "Starting /etc/init.d/eeepc-config \"start\": " > ${LOGFILE}
+	echo "Starting /etc/init.d/jolicloud-netbook-config \"start\": " > ${LOGFILE}
 	date >> ${LOGFILE}
 	echo >> ${LOGFILE}
 
@@ -237,7 +238,7 @@ do_start () {
 
 	# finished
 
-	echo "Finished /etc/init.d/eeepc-config \"start\": " >> ${LOGFILE}
+	echo "Finished /etc/init.d/jolicloud-netbook-config \"start\": " >> ${LOGFILE}
 	date >> ${LOGFILE}
 	echo >> ${LOGFILE}
 

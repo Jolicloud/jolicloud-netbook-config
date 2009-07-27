@@ -38,19 +38,19 @@ binary-indep: checkroot
 	$(install_dir) debian/tmp/usr/bin/
 	$(install_script) usr/bin/* debian/tmp/usr/bin/
 
-	$(install_dir) debian/tmp/usr/lib/eeepc-config/
-	$(install_file) usr/lib/eeepc-config/* debian/tmp/usr/lib/eeepc-config/
+	$(install_dir) debian/tmp/usr/lib/jolicloud-netbook-config/
+	$(install_file) usr/lib/jolicloud-netbook-config/* debian/tmp/usr/lib/jolicloud-netbook-config/
 
 	$(install_dir) debian/tmp/usr/lib/pm-utils/sleep.d/
 	$(install_script) usr/lib/pm-utils/sleep.d/* debian/tmp/usr/lib/pm-utils/sleep.d/
 
-	$(install_dir) debian/tmp/usr/share/doc/eeepc-config/
-	$(install_file) debian/changelog debian/tmp/usr/share/doc/eeepc-config/changelog.Debian
-	gzip -9v debian/tmp/usr/share/doc/eeepc-config/*
-	$(install_file) debian/copyright debian/tmp/usr/share/doc/eeepc-config/
-	$(install_file) usr/share/doc/eeepc-config/* debian/tmp/usr/share/doc/eeepc-config/
+	$(install_dir) debian/tmp/usr/share/doc/jolicloud-netbook-config/
+	$(install_file) debian/changelog debian/tmp/usr/share/doc/jolicloud-netbook-config/changelog.Debian
+	gzip -9v debian/tmp/usr/share/doc/jolicloud-netbook-config/*
+	$(install_file) debian/copyright debian/tmp/usr/share/doc/jolicloud-netbook-config/
+	$(install_file) usr/share/doc/jolicloud-netbook-config/* debian/tmp/usr/share/doc/jolicloud-netbook-config/
 
-	dpkg-gencontrol -peeepc-config
+	dpkg-gencontrol -pjolicloud-netbook-config
 
 	chown -R root:root debian/tmp
 	chmod -R go=rX debian/tmp

@@ -1,13 +1,14 @@
 #!/bin/sh
 ######################################################################
 # eeepc-config by F.Hendrikx, (c) 2008
+# jolicloud-netbook-config by Adam McDaniel, (c) 2009
 # postrm script
 ######################################################################
 set -e
 
 
-# remove eeepc-config init.d script
+# remove jolicloud-netbook-config init.d script
 
-update-rc.d -f eeepc-config remove >/dev/null || exit $?
+update-rc.d -f jolicloud-netbook-config remove >/dev/null || exit $?
 
 exit 0

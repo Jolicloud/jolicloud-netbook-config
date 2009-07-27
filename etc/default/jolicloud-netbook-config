@@ -1,0 +1,12 @@
+# Configuration file for jolicloud-netbook-config
+
+# If the cpufreq module is loaded (i.e., p4_clockmod) then some overly
+# conservative polices are set on the EeePC. (Such as "ondemand" and
+# default 100Mhz.) Sure, the result is 8hrs battery time but its VERY slow.
+# These options configure more realistic values. For more info see
+# cpufreq-info and cpufreq-set
+
+JNC_CPUFREQ_GOVERNOR="performance"
+JNC_CPUFREQ_MIN_FREQ="300000"
+
+

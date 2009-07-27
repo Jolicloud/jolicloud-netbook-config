@@ -1,4 +1,2 @@
-/etc/acpi/events/eeepc-hotkey
-/etc/default/eeepc-config
-/etc/init.d/eeepc-config
-/etc/modprobe.d/eeepc
+/etc/default/jolicloud-netbook-config
+/etc/init.d/jolicloud-netbook-config
