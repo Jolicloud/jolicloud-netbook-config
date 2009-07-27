@@ -1,7 +1,7 @@
 #!/bin/sh
 ######################################################################
 # eeepc-config by Ferry Hendrikx, (c) 2008
-# jolicloud-netbok-config by Adam McDaniel, (c) 2009
+# jolicloud-netbook-config by Adam McDaniel, (c) 2009
 #
 # System script that automatically configures the appropriate modules
 # depending on the Asus Eee PC model number. 
@@ -44,11 +44,11 @@ if [ -e /etc/default/jolicloud-netbook-config ]; then
 fi
 
 
-# Is this a NetBook PC?
-
-if ! isNetBook; then
-	exit 0;
-fi
+## Is this a NetBook PC?
+#
+#if ! isNetBook; then
+#	exit 0;
+#fi
 
 
 ######################################################################
@@ -128,19 +128,14 @@ remove_module () {
 do_start () {
 	log_action_begin_msg "Starting $NAME"
 
-	echo "Starting /etc/init.d/jolicloud-netbook-config \"start\": " > ${LOGFILE}
+	echo "Starting $NAME \"start\": " > ${LOGFILE}
 	date >> ${LOGFILE}
 	echo >> ${LOGFILE}
 
-	# Since /var/log may be under tmpfs control, some sub-dirs need to
-	# be created manually during the boot process.
 
-	if [ ! -d /var/log/apt ]; then
-		mkdir -p /var/log/apt
-	fi
-
-
+	#
 	# Common settings
+	#
 
 	set_sysctl dev.wifi0.ledpin 1
 	set_sysctl dev.wifi0.softled 1
@@ -149,7 +144,29 @@ do_start () {
 	set_sysctl vm.dirty_writeback_centisecs 1500
 
 
+	#
+	# Load power_save features on snd_hda_intel but only on 2.6.27 and
+	# later. 2.6.24 kernels result in a dead soundcard after the power_save
+	# value has elapsed.
+	#
+	# Enabling power_save with power_save_controller eliminates the need to
+	# reload snd_hda_intel on suspend/resume and remove it on shutdown.
+	#
+	# Note: Other snd_hda_intel module options are now handled directly in
+	# /etc/modprobe.d/eeepc
+	#
+
+	if isKernelLaterThanOrEqualTo "2.6.27"; then
+		[ -e /sys/module/snd_hda_intel/parameters/power_save ] &&
+			echo 10 > /sys/module/snd_hda_intel/parameters/power_save;
+		[ -e /sys/module/snd_hda_intel/parameters/power_save_controller ] &&
+			echo Y > /sys/module/snd_hda_intel/parameters/power_save_controller;
+	fi
+
+
+	#
 	# Setup sane mixer levels for the front mic
+	#
 
 	set_amixer "Input Source" "Front Mic"
 	set_amixer "Capture" "80%" "cap" "unmute"
@@ -157,24 +174,48 @@ do_start () {
 	set_amixer "Front Mic" "100%" "mute"
 
 
-	# Set other configuration options
+	#
+	# Insert rfkill-input module for wifi / bluetooth control
+	# Enable the wifi and bluetooth radios
+	#
 
-	if [ "${EEEPC_CPUFREQ_MIN_FREQ}" != "" ]; then
+	insert_module rfkill-input
+	for dir in `ls -d /sys/class/rfkill*`; do
+		echo $dir/name == `cat $dir/name` >> ${LOGFILE}
+		set_sysfs $dir/state 1
+	done
+
+
+	#
+	# Enable the camera and cardreader
+	#
+
+	set_sysfs /sys/bus/platform/devices/eeepc/camera 1
+	set_sysfs /sys/bus/platform/devices/eeepc/cardr 1
+
+
+	#
+	# Set other configuration options
+	#
+
+	if [ "${JNC_CPUFREQ_MIN_FREQ}" != "" ]; then
 		for i in `find /sys/devices/system/cpu -name scaling_min_freq`; do
-			set_sysfs $i ${EEEPC_CPUFREQ_MIN_FREQ}
+			if [ `cat $i` -lt ${JNC_CPUFREQ_MIN_FREQ} ]; then
+				set_sysfs $i ${JNC_CPUFREQ_MIN_FREQ}
+			fi
 		done
 	fi
 
-	if [ "${EEEPC_CPUFREQ_GOVERNOR}" != "" ]; then
+	if [ "${JNC_CPUFREQ_GOVERNOR}" != "" ]; then
 		for i in `find /sys/devices/system/cpu -name scaling_governor`; do
-			set_sysfs $i ${EEEPC_CPUFREQ_GOVERNOR}
+			set_sysfs $i ${JNC_CPUFREQ_GOVERNOR}
 		done
 	fi
 
 
 	# finished
 
-	echo "Finished /etc/init.d/jolicloud-netbook-config \"start\": " >> ${LOGFILE}
+	echo "Finished $NAME \"start\": " >> ${LOGFILE}
 	date >> ${LOGFILE}
 	echo >> ${LOGFILE}
 
@@ -184,23 +225,6 @@ do_start () {
 
 do_stop () {
 	log_action_begin_msg "Stopping $NAME"
-
-	RUNLEVEL=`runlevel | cut -d ' ' -f 2`
-
-	# If our runlevel is 0, we're actually halting the machine. A bug in
-	# snd_hda_intel prevents the Eee PC from powering off if this module 
-	# is still loaded. So, unload it.
-	#
-	# This bug was fixed with BIOS >= 0802. Also, snd_hda_intel must
-	# have power_save & power_save_controller parameters set (see
-	# /etc/modprobe.d/eeepc) before this unloading becomes unnecessary.
-
-	if isKernelEarlierThan "2.6.27"; then
-		if [ "${RUNLEVEL}" = "0" ]; then
-			remove_module snd_hda_intel
-		fi
-	fi
-
 
 	# finished
 
