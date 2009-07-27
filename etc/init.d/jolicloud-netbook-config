@@ -180,7 +180,7 @@ do_start () {
 	#
 
 	insert_module rfkill-input
-	for dir in `ls -d /sys/class/rfkill*`; do
+	for dir in `ls -d /sys/class/rfkill/rfkill[0-9]`; do
 		echo $dir/name == `cat $dir/name` >> ${LOGFILE}
 		set_sysfs $dir/state 1
 	done
