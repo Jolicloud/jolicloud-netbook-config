@@ -1,3 +1,9 @@
+jolicloud-netbook-config (2:1.1) robby; urgency=low
+
+  * Appended "sane sound mixer" rules.
+
+ -- Adam McDaniel <adam@jolicloud.org>  Sun, 26 Jul 2009 21:42:03 -0600
+
 jolicloud-netbook-config (2:1.0) robby; urgency=low
 
   * Forked eeepc-config (1.3-6) originally from Ferry Hendrikx & Adam McDaniel
