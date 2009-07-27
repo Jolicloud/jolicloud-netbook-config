@@ -1,3 +1,26 @@
+jolicloud-netbook-config (2:1.0) robby; urgency=low
+
+  * Forked eeepc-config (1.3-6) originally from Ferry Hendrikx & Adam McDaniel
+  * Removed redundant ACPI code
+  * Renamed 'eeepc-config' to 'jolicloud-netbook-config'
+  * Removed redundant module/gconf code needed by earlier kernels
+  * Simplified /etc/init.d/jolicloud-netbook-config
+
+ -- Adam McDaniel <adam@jolicloud.org>  Sun, 26 Jul 2009 19:10:12 -0600
+
+eeepc-config (1.3-6) hardy; urgency=low
+
+  * Set package recommendations of linux-image-eeepc or eeepc-lean
+  * Updated functions script to be eeepc-lean aware.
+
+ -- Adam McDaniel <adam@array.org>  Sun, 19 Oct 2008 10:56:00 -0600
+
+eeepc-config (1.3-5) hardy; urgency=low
+
+  * Fixed toggling of Fn-F6..F8 hotkeys on EeePC 1000
+
+ -- Adam McDaniel <adam@array.org>  Wed, 15 Oct 2008 17:05:10 -0600
+
 eeepc-config (1.3-4) hardy-proposed; urgency=low
 
   * Added realtek (rtl8187) wireless toggle support.
