@@ -149,76 +149,12 @@ do_start () {
 	set_sysctl vm.dirty_writeback_centisecs 1500
 
 
-	# Load power_save features on snd_hda_intel but only on 2.6.27 and
-	# later. 2.6.24 kernels result in a dead soundcard after the power_save
-	# value has elapsed.
-	#
-	# Enabling power_save with power_save_controller eliminates the need to
-	# reload snd_hda_intel on suspend/resume and remove it on shutdown.
-	#
-	# Note: Other snd_hda_intel module options are now handled directly in
-	# /etc/modprobe.d/eeepc
-
-	if isKernelLaterThanOrEqualTo "2.6.27"; then
-		[ -e /sys/module/snd_hda_intel/parameters/power_save ] &&
-			echo 10 > /sys/module/snd_hda_intel/parameters/power_save;
-		[ -e /sys/module/snd_hda_intel/parameters/power_save_controller ] &&
-			echo Y > /sys/module/snd_hda_intel/parameters/power_save_controller;
-	fi
-
-
 	# Setup sane mixer levels for the front mic
 
 	set_amixer "Input Source" "Front Mic"
 	set_amixer "Capture" "80%" "cap" "unmute"
 	set_amixer "Front Mic Boost" "30%" "unmute"
 	set_amixer "Front Mic" "100%" "mute"
-
-
-	# Load modules
-
-	# Probing of the network devices will be unnecessary in a
-	# future eeepc kernel version.
-
-	# The Attansic(v2) (wired) network drivers are supported by the EeePC
-	# 900 and earlier. Attansic(v1) (wired) drivers are supported by the
-	# EeePC 900a and later.
-
-	# The Atheros (wireless) network drivers are supported by the 
-	# EeePC 900a and earlier. Ralink (wireless) drivers are supported by
-	# the EeePC 901 and later.
-
-	if isModelLessThanOrEqualTo "900"; then
-		insert_module atl2
-	else
-		insert_module atl1e
-	fi
-
-	if isModelLessThanOrEqualTo "900a"; then
-		if isKernelLaterThan "2.6.27"; then
-			insert_module ath5k
-		else
-			insert_module ath_pci
-		fi
-	else
-		insert_module rt2860sta
-	fi
-
-	if isKernelLaterThan "2.6.27"; then
-		insert_module eeepc_laptop
-	else
-		insert_module eeepc_acpi
-	fi
-
-	insert_module pciehp pciehp_force=1
-	insert_module i2c-i801
-	insert_module asus_eee
-
-	if isModelLessThanOrEqualTo "900"; then
-		insert_module p4_clockmod
-	else
-		insert_module acpi-cpufreq
-	fi
 
 
 	# Set other configuration options
