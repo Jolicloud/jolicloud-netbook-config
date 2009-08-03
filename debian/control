@@ -7,7 +7,7 @@ Standards-Version: 3.6.1.0
 Package: jolicloud-netbook-config
 Architecture: all
 Depends: dmidecode, perl
-Recommends: linux-image-jolicloud | linux-image-jolicloud-atom, cpufrequtils
+Recommends: linux-image-jolicloud | linux-image-jolicloud-atom
 Conflicts: eee-osd
 Provides: eee-osd
 Replaces: eee-osd, eeepc-config
