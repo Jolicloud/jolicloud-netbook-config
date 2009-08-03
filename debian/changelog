@@ -1,3 +1,10 @@
+jolicloud-netbook-config (2:1.2) robby; urgency=low
+
+  * Remove requirement on cpufrequtils
+  * Instruct update-rc.d to load JNC after cpufrequtils (if it's loaded)
+
+ -- Adam McDaniel <adam@jolicloud.org>  Mon, 03 Aug 2009 16:23:54 -0600
+
 jolicloud-netbook-config (2:1.1) robby; urgency=low
 
   * Appended "sane sound mixer" rules.
