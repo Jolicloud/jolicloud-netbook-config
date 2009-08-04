@@ -28,7 +28,17 @@ invoke-rc.d acpid restart
 
 invoke-rc.d jolicloud-netbook-config start
 
+
 # Change grub default timeout
+
 sed -i.dpkg-old -e 's/^timeout[ \t]*[0-9]*$/timeout\t\t1/' /boot/grub/menu.lst
+
+
+# Disable init script 'ondemand', we'll be handling it ourselves
+
+if [ -x /etc/init.d/ondemand ]; then
+    chmod -x /etc/init.d/ondemand;
+fi
+
 
 exit 0
