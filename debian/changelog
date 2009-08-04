@@ -1,4 +1,4 @@
-jolicloud-netbook-config (2:1.4) robby; urgency=low
+jolicloud-netbook-config (2:1.3) robby; urgency=low
 
   * Change default grub timeout.
 
