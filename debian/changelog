@@ -1,3 +1,9 @@
+jolicloud-netbook-config (2:1.4) robby; urgency=low
+
+  * Change default grub timeout.
+
+ -- Benjamin Ryzman <benjamin@jolicloud.org>  Tue, 04 Aug 2009 11:56:27 +0200
+
 jolicloud-netbook-config (2:1.2) robby; urgency=low
 
   * Remove requirement on cpufrequtils
