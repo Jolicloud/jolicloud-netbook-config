@@ -161,14 +161,24 @@ do_start () {
 
 
 	#
-	# Setup sane mixer levels for the front mic
+	# Setup sane mixer levels for the front mic, speaker, etc. If a mixer
+	# channel is not supported by a device, it is silently ignored.
 	#
 
+	# For HP Mini 110-1000, possibly other HP and Dell Minis
+	set_amixer "Speaker" "100%" "unmute"
+	set_amixer "Amp" "66%" "cap"
+	set_amixer "Digital Input Source" "Analog Inputs"
+
+	# For other devices like EeePC, Samsung
 	set_amixer "LineOut" "100%" "unmute"
+	set_amixer "Headphone" "100%" "unmute"
+	set_amixer "PCM" "90%" "unmute"
+	set_amixer "Master" "90%" "unmute"
 	set_amixer "Input Source" "Front Mic"
 	set_amixer "Capture" "90%" "cap" "unmute"
 	set_amixer "Front Mic Boost" "30%" "unmute"
-	set_amixer "Front Mic" "100%" "mute"
+	set_amixer "Front Mic" "100%" "cap" "mute"
 	set_amixer "Mic Boost" "30%" "unmute"
 	set_amixer "Mic" "100%" "mute"
 
