@@ -165,26 +165,44 @@ do_start () {
 	# channel is not supported by a device, it is silently ignored.
 	#
 
-	# For HP Mini 110-1000, possibly other HP Minis
-	set_amixer "Speaker" "100%" "unmute"
-	set_amixer "Amp" "0%"
-	set_amixer "Digital" "80%"
-	set_amixer "Digital Input Source" "Analog Inputs"
-
-	# For Dell Mini 9, possibly other Dell Minis
-	set_amixer "Internal Mic Boost" "30%" "unmute"
-
-	# Generic list for other devices
-	set_amixer "LineOut" "100%" "unmute"
-	set_amixer "Headphone" "100%" "unmute"
-	set_amixer "PCM" "90%" "unmute"
-	set_amixer "Master" "90%" "unmute"
-	set_amixer "Input Source" "Front Mic"
-	set_amixer "Capture" "90%" "cap" "unmute"
-	set_amixer "Front Mic Boost" "30%" "unmute"
-	set_amixer "Front Mic" "100%" "cap" "mute"
-	set_amixer "Mic Boost" "30%" "unmute"
-	set_amixer "Mic" "100%" "mute"
+	if isProduct "^HP Mini"; then
+		# For HP Mini 110-1000, possibly other HP Minis
+		echo "Setting sound levels for HP Mini..." >>${LOGFILE}
+		set_amixer "Master" "90%" "unmute"
+		set_amixer "Headphone" "100%" "unmute"
+		set_amixer "PCM" "90%" "unmute"
+		set_amixer "Speaker" "100%" "unmute"
+		set_amixer "Front Mic" "100%" "cap"
+		set_amixer "Capture" "90%" "cap"
+		set_amixer "Amp" "0%"
+		set_amixer "Digital" "80%"
+		set_amixer "Digital Input Source" "Analog Inputs"
+	elif isProduct "^Inspiron 9"; then
+		# For Dell Mini 9, possibly other Dell Minis
+		echo "Setting sound levels for Dell Mini..." >>${LOGFILE}
+		set_amixer "Master" "90%" "unmute"
+		set_amixer "Headphone" "100%" "unmute"
+		set_amixer "PCM" "90%" "unmute"
+		set_amixer "Speaker" "100%" "unmute"
+		set_amixer "Internal Mic Boost" "50%" "unmute"
+		set_amixer "Capture" "90%" "cap"
+		set_amixer "Capture 1" "90%" "cap"
+		set_amixer "Input Source" "Front Mic"
+		set_amixer "Input Source 1" "Front Mic"
+	else
+		# Generic list for other devices
+		echo "Setting sound for generic devices..." >>${LOGFILE}
+		set_amixer "Master" "90%" "unmute"
+		set_amixer "PCM" "90%" "unmute"
+		set_amixer "LineOut" "100%" "unmute"
+		set_amixer "Headphone" "100%" "unmute"
+		set_amixer "Input Source" "Front Mic"
+		set_amixer "Capture" "90%" "cap" "unmute"
+		set_amixer "Front Mic Boost" "30%" "unmute"
+		set_amixer "Front Mic" "100%" "cap" "mute"
+		set_amixer "Mic Boost" "30%" "unmute"
+		set_amixer "Mic" "100%" "mute"
+	fi
 
 
 	#

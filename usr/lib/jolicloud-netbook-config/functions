@@ -33,7 +33,6 @@ isNetBook ()
 			return 0;
 		fi
 
-		isProduct "Tx1100"
 		if isProduct "Tx1100"; then
 			return 0;
 		fi
@@ -53,7 +52,7 @@ isNetBookKernel ()
 
 isProduct ()
 {
-	if echo "${PRODNM}" | grep -qi $1; then
+	if echo "${PRODNM}" | grep -qi "$@"; then
 		return 0;
 	fi
 
@@ -62,7 +61,7 @@ isProduct ()
 
 isSerial ()
 {
-	if echo "${SERIAL}" | grep -qi $1; then
+	if echo "${SERIAL}" | grep -qi "$@"; then
 		return 0;
 	fi
 
