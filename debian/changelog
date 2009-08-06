@@ -1,3 +1,11 @@
+jolicloud-netbook-config (2:1.5) robby; urgency=low
+
+  * Added sound mixer fixes for the microphone on HP Mini, Dell Mini
+  * Removed warning messages if rfkill is not supported
+  * Re-figgle Dell Mini and HP Mini mixer settings
+
+ -- Adam McDaniel <adam@jolicloud.org>  Wed, 05 Aug 2009 12:16:09 -0600
+
 jolicloud-netbook-config (2:1.4) robby; urgency=low
 
   * Disable init script 'ondemand', we'll be handling it ourselves
