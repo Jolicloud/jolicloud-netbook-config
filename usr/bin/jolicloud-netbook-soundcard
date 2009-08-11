@@ -1,0 +1,71 @@
+#!/usr/bin/perl
+
+use Data::Dumper;
+
+my $channel = "";
+my $mixer = {};
+
+foreach my $line ( `amixer` ) {
+    chomp;
+    if ( $line =~ /^Simple mixer control ('.*?',(\d))$/ ) {
+        # Skip channels that do not end in 0
+        $channel = ( $2 eq "0" ) ? $1 : "";
+    }
+    elsif ( $channel && $line =~ /^  (.*?): (.*?)$/ ) {
+        my ( $key, $val ) = ( $1, $2 );
+        if ( ( $key eq "Capabilities" ) ||
+             ( $key =~ "Items" ) ) {
+            if ( $val =~ s/^'(.*?)'$/$1/ ) {
+                $val = [ split( "' '", $val ) ];
+            }
+            else {
+                $val = [ split( " ", $val ) ];
+            }
+        }
+        elsif ( $key eq "Item0" ) {
+            $val =~ s/^'(.*?)'$/$1/;
+        }
+        $mixer->{ $channel }->{ $key } = $val;
+    }
+}
+
+print Dumper( $mixer );
+
+while ( ( $channel, $data ) = each %{ $mixer } ) {
+    my $sset;
+
+    if ( &isin( "pvolume", $data->{ 'Capabilities' } ) ) {
+        $sset = "$channel '90%' 'unmute'";
+    }
+    elsif ( &isin( "cenum", $data->{ 'Capabilities' } ) ) {
+        foreach my $item ( @{ $data->{ 'Items' } } ) {
+            if ( $item eq "Front Mic" || 
+                 $item eq "i-Mic" ) {
+                $sset = "$channel '$item'";
+            }
+        }
+    }
+    elsif ( &isin( "cvolume", $data->{ 'Capabilities' } ) ) {
+        if ( $channel eq "'Capture',0" ) {
+            $sset = "$channel '100%'";
+        }
+    }
+    elsif ( &isin( "cswitch", $data->{ 'Capabilities' } ) ) {
+        $sset = "amixer sset $channel 'cap'";
+    }
+
+    if ( $sset ) {
+        print "/usr/bin/amixer sset $sset\n";
+        print `/usr/bin/amixer sset $sset`;
+        print "\n";
+    }
+}
+
+
+
+sub isin
+{
+    my ( $needle, $haystack ) = @_;
+    return grep( $_ eq $needle, @{ $haystack } );
+}
+
