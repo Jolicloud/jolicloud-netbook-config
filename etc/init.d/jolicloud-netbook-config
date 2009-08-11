@@ -196,7 +196,8 @@ do_start () {
 		set_amixer "PCM" "90%" "unmute"
 		set_amixer "LineOut" "100%" "unmute"
 		set_amixer "Headphone" "100%" "unmute"
-		set_amixer "Input Source" "Front Mic"
+# Temporarily disable "Input Source" until perl script ready
+#		set_amixer "Input Source" "Front Mic"
 		set_amixer "Capture" "90%" "cap" "unmute"
 		set_amixer "Front Mic Boost" "30%" "unmute"
 		set_amixer "Front Mic" "100%" "cap" "mute"
