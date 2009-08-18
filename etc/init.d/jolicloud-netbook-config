@@ -245,6 +245,8 @@ do_start () {
 		done
 	fi
 
+	# If we're booting on battery power, adjust to cpufreq battery policy
+	sh /etc/acpi/battery.d/10-cpufreq.sh
 
 	# finished
 

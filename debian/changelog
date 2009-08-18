@@ -1,3 +1,9 @@
+jolicloud-netbook-config (2:1.6) robby; urgency=low
+
+  * Set cpufreq policy for AC and Battery power mode
+
+ -- Adam McDaniel <adam@jolicloud.org>  Mon, 17 Aug 2009 16:54:00 -0600
+
 jolicloud-netbook-config (2:1.5.1) robby; urgency=low
 
   * Postinst work around for when grub is not installed

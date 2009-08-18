@@ -23,6 +23,10 @@ binary-indep: checkroot
 	$(install_script) debian/postinst debian/tmp/DEBIAN/
 	$(install_script) debian/postrm debian/tmp/DEBIAN/
 
+	$(install_dir) debian/tmp/etc/acpi/ac.d/
+	$(install_dir) debian/tmp/etc/acpi/battery.d/
+	$(install_script) etc/acpi/ac.d/* debian/tmp/etc/acpi/ac.d
+	$(install_script) etc/acpi/battery.d/* debian/tmp/etc/acpi/battery.d
 	$(install_dir) debian/tmp/etc/default/
 	$(install_file) etc/default/* debian/tmp/etc/default/
 	$(install_dir) debian/tmp/etc/init.d/
