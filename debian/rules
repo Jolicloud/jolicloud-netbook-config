@@ -31,6 +31,8 @@ binary-indep: checkroot
 	$(install_file) etc/default/* debian/tmp/etc/default/
 	$(install_dir) debian/tmp/etc/init.d/
 	$(install_script) etc/init.d/* debian/tmp/etc/init.d/
+	$(install_dir) debian/tmp/etc/hal/fdi/policy/
+	$(install_file) etc/hal/fdi/policy/* debian/tmp/etc/hal/fdi/policy/
 
 	$(install_dir) debian/tmp/usr/bin/
 	$(install_script) usr/bin/* debian/tmp/usr/bin/
