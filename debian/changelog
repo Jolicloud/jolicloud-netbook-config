@@ -1,8 +1,12 @@
 jolicloud-netbook-config (2:1.6) robby; urgency=low
 
   * Set cpufreq policy for AC and Battery power mode
+  * Enable sched_smt_power_savings on battery power
+  * Renamed 10-cpufreq.sh to 99-jolicloud-netbook-config.sh
+  * Added jolicloud-netbook-config ACPI scripts to conffiles
+  * Add equivilant of "SHMConfig on" into hal to support gsynaptics
 
- -- Adam McDaniel <adam@jolicloud.org>  Mon, 17 Aug 2009 16:54:00 -0600
+ -- Adam McDaniel <adam@jolicloud.org>  Tue, 25 Aug 2009 16:00:27 -0600
 
 jolicloud-netbook-config (2:1.5.2) robby; urgency=low
 
