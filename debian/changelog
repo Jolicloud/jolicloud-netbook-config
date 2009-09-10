@@ -1,3 +1,11 @@
+jolicloud-netbook-config (2:1.6.1) robby; urgency=low
+
+  * Disable Advanced Power Management on HDs on battery power
+  * No need to print the output of the update-rc.d installation
+  * Set package section to "jolicloud/misc"
+
+ -- Adam McDaniel <adam@jolicloud.org>  Thu, 10 Sep 2009 11:46:06 +0200
+
 jolicloud-netbook-config (2:1.6) robby; urgency=low
 
   * Set cpufreq policy for AC and Battery power mode
