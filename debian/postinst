@@ -10,7 +10,7 @@ set -e
 # add eeepc-config init.d script
 
 if [ -x "/etc/init.d/jolicloud-netbook-config" ]; then
-	update-rc.d jolicloud-netbook-config start 40 2 3 4 5 . stop 85 0 . || exit $?
+	update-rc.d jolicloud-netbook-config start 40 2 3 4 5 . stop 85 0 . > /dev/null || exit $?
 fi
 
 
