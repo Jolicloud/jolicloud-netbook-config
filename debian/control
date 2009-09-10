@@ -1,5 +1,5 @@
 Source: jolicloud-netbook-config
-Section: misc
+Section: jolicloud/misc
 Priority: optional
 Maintainer: Adam McDaniel <adam@jolicloud.org>
 Standards-Version: 3.6.1.0
