@@ -19,7 +19,7 @@ my $config = {
     "'PC Beep',0" => {   pvolume => "0%",   pswitch => "mute", },
     "'Internal Mic Boost',0" => { pvolume => "50%", pswitch => "unmute" },
     "'Front Mic Boost',0" => { pvolume => "30%", pswitch => "unmute" },
-    "'Mic Jack Mode',0" => { enum => "Mic Inff" },
+    "'Mic Jack Mode',0" => { enum => "Mic In" },
     "'Input Source',0" => { cenum => "Front Mic" },
     "'Capture',0" => {   cvolume => "100%", cswitch => "cap", },
     "'Front Mic',0" => { cvolume => "90%",  cswitch => "cap", },
@@ -30,7 +30,7 @@ my $config = {
 open( LOG, ">>$LOGFILE" );
 STDOUT->fdopen( \*LOG, "w" ) || die $!;
 
-&log( "Begin Jolicloud-netbook-soundcard" );
+&log( "Begin $0" );
 
 while ( my $arg = shift ) {
     if ( $arg eq "-D" ) {
@@ -105,7 +105,7 @@ while ( ( $channel, $data ) = each %{ $mixer } ) {
     }
 }
 
-&log( "Finish Jolicloud-netbook-soundcard" );
+&log( "Finish $0" );
 close( LOG );
 
 
@@ -119,7 +119,7 @@ sub log
 
     my $time = sprintf "%04d-%02d-%02d %02d:%02d:%02d", reverse @time[ 0..5 ];
 
-    print LOG "$time (JNS) $msg\n";
+    print LOG "$time (RSC) $msg\n";
     if ( $msg =~ /^(WARNING|ERROR)/ ) {
         print STDERR "$time (JNS) $msg\n";
     }
