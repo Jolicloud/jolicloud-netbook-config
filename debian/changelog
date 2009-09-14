@@ -1,3 +1,21 @@
+jolicloud-netbook-config (2:1.7~1.git.7a0dd33e) robby-test; urgency=low
+
+  ** SNAPSHOT build @7a0dd33efb14511e5284e290792bd774ed5e717e **
+
+  * Added package dependency on ACPI
+  * Re-arranged jolicloud-netbook-soundcard to support a global
+    soundcard standard
+  * Add additional logging to jolicloud-netbook-soundcard
+  * Added additional global config vars for HP and Dell Mini-like
+    netbooks
+  * Added logic to gracefully ignore requested enum if the device lacks
+    the option
+  * Replaced old set_amixer shell with new reset-soundcard-channels.pl
+    script
+  * Updated logging messages, cleared test data from global config
+
+ -- Adam McDaniel <adam@jolicloud.org>  Mon, 14 Sep 2009 15:17:05 -0600
+
 jolicloud-netbook-config (2:1.6.1) robby; urgency=low
 
   * Disable Advanced Power Management on HDs on battery power
