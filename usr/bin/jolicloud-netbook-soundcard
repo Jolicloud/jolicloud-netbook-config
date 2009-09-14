@@ -1,10 +1,12 @@
 #!/usr/bin/perl
 
 use Data::Dumper;
+use IO::Handle;
 
 my $channel = "";
 my $mixer = {};
 
+my $LOGFILE = "/var/log/jolicloud-netbook-config";
 my $VERBOSE = 0;
 my $DRYRUN = 0;
 my $DEBUG = 0;
@@ -20,6 +22,11 @@ my $config = {
     "'i-Mic',0" => {     cvolume => "90%",  cswitch => "cap", },
     "'Line In',0" => {   cvolume => "90%",  cswitch => "cap", },
 };
+
+open( LOG, ">>$LOGFILE" );
+STDOUT->fdopen( \*LOG, "w" ) || die $!;
+
+&log( "Begin Jolicloud-netbook-soundcard" );
 
 while ( my $arg = shift ) {
     if ( $arg eq "-D" ) {
@@ -57,16 +64,18 @@ foreach my $line ( `amixer` ) {
     }
 }
 
-print Dumper( $mixer ) if ( $DEBUG );
+&log( "Amixer Settings: " . Dumper( $mixer ) );
+&log( "Global Config: " . Dumper( $config ) );
+
+# Load any device-specific config
+
+#&log( "Device Config: " . Dumper( $config ) );
 
 while ( ( $channel, $data ) = each %{ $mixer } ) {
     my @sset;
 
     if ( exists $config->{ $channel } ) {
-        # Load the global config
         my $cfg = $config->{ $channel };
-
-        # Load any device-specific config
 
         while ( my ( $capability, $setting ) = each %{ $cfg } ) {
             if ( &isin( $capability, $data->{ 'Capabilities' } ) ) {
@@ -77,11 +86,29 @@ while ( ( $channel, $data ) = each %{ $mixer } ) {
 
     if ( @sset ) {
         my $cmd = "/usr/bin/amixer sset $channel " . join( ' ', @sset );
-        print "$cmd\n" if ( $VERBOSE );
+        print STDERR "$cmd\n" if ( $VERBOSE );
+        &log( $cmd );
+        # Execute the command. Data returned on STDOUT is relayed to LOG
         print `$cmd` . "\n" if ( ! $DRYRUN );
     }
 }
 
+&log( "Finish Jolicloud-netbook-soundcard" );
+close( LOG );
+
+
+
+sub log
+{
+    my $msg  = shift;
+    my @time = localtime;
+    $time[ 5 ] += 1900;
+    $time[ 4 ] += 1;
+
+    my $time = sprintf "%04d-%02d-%02d %02d:%02d:%02d", reverse @time[ 0..5 ];
+
+    print LOG "$time (JNS) $msg\n";
+}
 
 
 sub isin
