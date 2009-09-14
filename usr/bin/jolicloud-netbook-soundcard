@@ -83,7 +83,15 @@ while ( ( $channel, $data ) = each %{ $mixer } ) {
 
         while ( my ( $capability, $setting ) = each %{ $cfg } ) {
             if ( &isin( $capability, $data->{ 'Capabilities' } ) ) {
-                push( @sset, $setting );
+                # If we're dealing with an enum or cenum, make sure the
+                # setting requested exists in the Items array, otherwise
+                # amixer will error out.
+                if ( $capability =~ /enum$/ &&
+                     ! &isin( $setting, $data->{ 'Items' } ) ) {
+                    &log( "WARNING: cannot apply $channel -> $setting" );
+                    next;
+                }
+                push( @sset, qq("$setting") );
             }
         }
     }
@@ -112,6 +120,9 @@ sub log
     my $time = sprintf "%04d-%02d-%02d %02d:%02d:%02d", reverse @time[ 0..5 ];
 
     print LOG "$time (JNS) $msg\n";
+    if ( $msg =~ /^(WARNING|ERROR)/ ) {
+        print STDERR "$time (JNS) $msg\n";
+    }
 }
 
 
