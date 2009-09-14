@@ -5,6 +5,34 @@ use Data::Dumper;
 my $channel = "";
 my $mixer = {};
 
+my $VERBOSE = 0;
+my $DRYRUN = 0;
+my $DEBUG = 0;
+
+my $config = {
+    "'Master',0" => {    pvolume => "90%",  pswitch => "unmute" },
+    "'PCM',0" => {       pvolume => "100%", pswitch => "unmute", },
+    "'Headphone',0" => { pvolume => "100%", pswitch => "unmute", },
+    "'Speaker',0" => {   pvolume => "100%", pswitch => "unmute", },
+    "'PC Beep',0" => {   pvolume => "0%",   pswitch => "mute", },
+    "'Capture',0" => {   cvolume => "100%", cswitch => "cap", },
+    "'Front Mic',0" => { cvolume => "90%",  cswitch => "cap", },
+    "'i-Mic',0" => {     cvolume => "90%",  cswitch => "cap", },
+    "'Line In',0" => {   cvolume => "90%",  cswitch => "cap", },
+};
+
+while ( my $arg = shift ) {
+    if ( $arg eq "-D" ) {
+        $DEBUG = 1;
+    }
+    elsif ( $arg eq "-d" ) {
+        $DRYRUN = 1;
+    }
+    elsif ( $arg eq "-v" ) {
+        $VERBOSE = 1;
+    }
+}
+
 foreach my $line ( `amixer` ) {
     chomp;
     if ( $line =~ /^Simple mixer control ('.*?',(\d))$/ ) {
@@ -29,35 +57,28 @@ foreach my $line ( `amixer` ) {
     }
 }
 
-print Dumper( $mixer );
+print Dumper( $mixer ) if ( $DEBUG );
 
 while ( ( $channel, $data ) = each %{ $mixer } ) {
-    my $sset;
+    my @sset;
 
-    if ( &isin( "pvolume", $data->{ 'Capabilities' } ) ) {
-        $sset = "$channel '90%' 'unmute'";
-    }
-    elsif ( &isin( "cenum", $data->{ 'Capabilities' } ) ) {
-        foreach my $item ( @{ $data->{ 'Items' } } ) {
-            if ( $item eq "Front Mic" || 
-                 $item eq "i-Mic" ) {
-                $sset = "$channel '$item'";
+    if ( exists $config->{ $channel } ) {
+        # Load the global config
+        my $cfg = $config->{ $channel };
+
+        # Load any device-specific config
+
+        while ( my ( $capability, $setting ) = each %{ $cfg } ) {
+            if ( &isin( $capability, $data->{ 'Capabilities' } ) ) {
+                push( @sset, $setting );
             }
         }
     }
-    elsif ( &isin( "cvolume", $data->{ 'Capabilities' } ) ) {
-        if ( $channel eq "'Capture',0" ) {
-            $sset = "$channel '100%'";
-        }
-    }
-    elsif ( &isin( "cswitch", $data->{ 'Capabilities' } ) ) {
-        $sset = "amixer sset $channel 'cap'";
-    }
 
-    if ( $sset ) {
-        print "/usr/bin/amixer sset $sset\n";
-        print `/usr/bin/amixer sset $sset`;
-        print "\n";
+    if ( @sset ) {
+        my $cmd = "/usr/bin/amixer sset $channel " . join( ' ', @sset );
+        print "$cmd\n" if ( $VERBOSE );
+        print `$cmd` . "\n" if ( ! $DRYRUN );
     }
 }
 
