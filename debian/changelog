@@ -1,3 +1,9 @@
+jolicloud-netbook-config (2:1.7.1) robby-test; urgency=low
+
+  * Don't load rfkill_input, it's inline now
+
+ -- Adam McDaniel <adam@jolicloud.org>  Mon, 21 Sep 2009 11:09:41 -0600
+
 jolicloud-netbook-config (2:1.7) robby-test; urgency=low
 
   * Added package dependency on ACPI
