@@ -169,11 +169,9 @@ do_start () {
 
 
 	#
-	# Insert rfkill-input module for wifi / bluetooth control
-	# Enable the wifi and bluetooth radios
+	# Enable the wifi and bluetooth radios if rfkill is handling them
 	#
 
-	insert_module rfkill-input
 	if [ -d /sys/class/rfkill/rfkill[0-9] ]; then
 		for dir in `ls -d /sys/class/rfkill/rfkill[0-9]`; do
 			echo $dir/name == `cat $dir/name` >> ${LOGFILE}
