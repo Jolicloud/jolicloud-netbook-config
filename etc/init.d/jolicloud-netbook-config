@@ -172,7 +172,7 @@ do_start () {
 	# Enable the wifi and bluetooth radios if rfkill is handling them
 	#
 
-	if [ -d /sys/class/rfkill/rfkill[0-9] ]; then
+	if [ -d "/sys/class/rfkill/rfkill[0-9]" ]; then
 		for dir in `ls -d /sys/class/rfkill/rfkill[0-9]`; do
 			echo $dir/name == `cat $dir/name` >> ${LOGFILE}
 			set_sysfs $dir/state 1
