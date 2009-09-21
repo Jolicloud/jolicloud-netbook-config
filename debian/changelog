@@ -1,6 +1,4 @@
-jolicloud-netbook-config (2:1.7~1.git.7a0dd33e) robby-test; urgency=low
-
-  ** SNAPSHOT build @7a0dd33efb14511e5284e290792bd774ed5e717e **
+jolicloud-netbook-config (2:1.7) robby-test; urgency=low
 
   * Added package dependency on ACPI
   * Re-arranged jolicloud-netbook-soundcard to support a global
@@ -13,8 +11,9 @@ jolicloud-netbook-config (2:1.7~1.git.7a0dd33e) robby-test; urgency=low
   * Replaced old set_amixer shell with new reset-soundcard-channels.pl
     script
   * Updated logging messages, cleared test data from global config
+  * Applied info collected by JSH into reset-sound-channels script
 
- -- Adam McDaniel <adam@jolicloud.org>  Mon, 14 Sep 2009 15:17:05 -0600
+ -- Adam McDaniel <adam@jolicloud.org>  Sun, 20 Sep 2009 21:32:50 -0600
 
 jolicloud-netbook-config (2:1.6.1) robby; urgency=low
 
