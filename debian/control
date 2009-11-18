@@ -10,7 +10,7 @@ Depends: dmidecode, perl, acpi
 Recommends: linux-image-jolicloud | linux-image-jolicloud-atom
 Conflicts: eee-osd
 Provides: eee-osd
-Replaces: eee-osd, eeepc-config
+Replaces: eee-osd, eeepc-config, poulsbo-config
 Description: Jolicloud Netbook configuration
  This package provides automatic configuration of your Jolicloud Linux
  system for various netbooks. Kernel module configuration takes place
