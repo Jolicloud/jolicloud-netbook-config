@@ -1,3 +1,10 @@
+jolicloud-netbook-config (2:1.8.1) robby; urgency=low
+
+  * Disable smooth scrolling on firefox/prism when running poulsbo
+    hardware
+
+ -- Adam McDaniel <adam@jolicloud.org>  Wed, 18 Nov 2009 13:22:06 -0700
+
 jolicloud-netbook-config (2:1.8) robby; urgency=low
 
   * Added support to pre-configure poulsbo hardware
