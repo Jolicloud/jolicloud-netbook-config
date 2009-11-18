@@ -1,3 +1,10 @@
+jolicloud-netbook-config (2:1.8) robby; urgency=low
+
+  * Added support to pre-configure poulsbo hardware
+  * Added "Replaces: poulsbo-config" rule
+
+ -- Adam McDaniel <adam@jolicloud.org>  Tue, 17 Nov 2009 23:51:55 -0700
+
 jolicloud-netbook-config (2:1.7.2) robby-test; urgency=low
 
   * Fixed a spurious error message parsing the init.d script
