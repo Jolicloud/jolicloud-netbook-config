@@ -25,4 +25,12 @@ if `lspci | grep Poulsbo | grep -q Graphics`; then
     if [ -e /usr/lib/jolicloud-netbook-config/config-xorg-poulsbo.py ]; then
         /usr/lib/jolicloud-netbook-config/config-xorg-poulsbo.py
     fi
+
+
+    # Disable smooth-scrolling in the firefox and prism javascript config files
+    for f in `find /etc -name "jolicloud-*.js"`; do
+        if [ `grep "general.smoothScroll" $f | grep -c "true"` -ne 0 ]; then
+            sed -i "s/general.smoothScroll\", true/general.smoothScroll\", false/" $f
+        fi
+    done
 fi
