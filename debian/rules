@@ -33,6 +33,11 @@ binary-indep: checkroot
 	$(install_script) etc/init.d/* debian/tmp/etc/init.d/
 	$(install_dir) debian/tmp/etc/hal/fdi/policy/
 	$(install_file) etc/hal/fdi/policy/* debian/tmp/etc/hal/fdi/policy/
+	$(install_dir) debian/tmp/etc/jolicloud-netbook-config.d/
+	$(install_file) etc/jolicloud-netbook-config.d/* debian/tmp/etc/jolicloud-netbook-config.d/
+	chmod 755 debian/tmp/etc/jolicloud-netbook-config.d/*.sh
+	$(install_dir) debian/tmp/etc/modprobe.d/
+	$(install_script) etc/modprobe.d/* debian/tmp/etc/modprobe.d/
 
 	$(install_dir) debian/tmp/usr/bin/
 	$(install_script) usr/bin/* debian/tmp/usr/bin/
@@ -40,6 +45,7 @@ binary-indep: checkroot
 	$(install_dir) debian/tmp/usr/lib/jolicloud-netbook-config/
 	$(install_file) usr/lib/jolicloud-netbook-config/* debian/tmp/usr/lib/jolicloud-netbook-config/
 	chmod 755 debian/tmp/usr/lib/jolicloud-netbook-config/*.pl
+	chmod 755 debian/tmp/usr/lib/jolicloud-netbook-config/*.py
 
 	$(install_dir) debian/tmp/usr/share/doc/jolicloud-netbook-config/
 	$(install_file) debian/changelog debian/tmp/usr/share/doc/jolicloud-netbook-config/changelog.Debian

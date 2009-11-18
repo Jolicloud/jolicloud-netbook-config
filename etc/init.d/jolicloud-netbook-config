@@ -209,6 +209,9 @@ do_start () {
 	# If we're booting on battery power, adjust to cpufreq battery policy
 	sh /etc/acpi/battery.d/99-jolicloud-netbook-config.sh
 
+	# Process external JNC scripts
+	. /etc/jolicloud-netbook-config.d/*.sh
+
 	# finished
 
 	echo "Finished $NAME \"start\": " >> ${LOGFILE}
