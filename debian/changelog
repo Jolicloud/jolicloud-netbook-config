@@ -1,3 +1,12 @@
+jolicloud-netbook-config (2:1.8.2) robby; urgency=low
+
+  * Avoid unnecessary grep and find calls which slow down the startup
+    process
+  * Re-activate /etc/init.d/ondemand, we no longer handle CPU switching
+    on bootup.
+
+ -- Adam McDaniel <adam@jolicloud.org>  Thu, 03 Dec 2009 20:56:25 +0100
+
 jolicloud-netbook-config (2:1.8.1) robby; urgency=low
 
   * Disable smooth scrolling on firefox/prism when running poulsbo
