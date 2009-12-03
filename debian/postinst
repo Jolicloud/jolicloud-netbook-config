@@ -36,10 +36,13 @@ if [ -w /boot/grub/menu.lst ] ; then
 fi
 
 
-# Disable init script 'ondemand', we'll be handling it ourselves
+# Re-enable init script 'ondemand', we no longer handle it ourselves.
+# Earlier versions of JNC disabled this script. Keeping this "chmod +x"
+# code is only required for the first JNC upgrade, or after the PreBeta is
+# released.
 
-if [ -x /etc/init.d/ondemand ]; then
-    chmod -x /etc/init.d/ondemand;
+if [ ! -x /etc/init.d/ondemand ]; then
+    chmod +x /etc/init.d/ondemand;
 fi
 
 
