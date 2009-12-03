@@ -5,7 +5,7 @@
 getState
 
 if [ $STATE = "AC" ]; then
-    for i in `find /sys/devices/system/cpu -name scaling_governor`; do
+    for i in /sys/devices/system/cpu?/cpufreq/scaling_governor; do
         echo "performance" > $i;
     done
 
