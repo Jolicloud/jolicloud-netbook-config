@@ -1,0 +1,6 @@
+Scripts written to this directory are executed by jolicloud-netbook-config
+on every bootup. Do not store one-time-setup scripts in here, only code and
+programs that must be executed on bootup.
+
+Scripts should also identify their hardware and only actually execute when
+the user's hardware matches.
