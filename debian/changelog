@@ -1,3 +1,10 @@
+jolicloud-netbook-config (2:1.9.0) robby; urgency=low
+
+  * Added a etc/jolicloud-netbook-config.d/README to explain its purpose
+  * Added provisions for VIA Chrome9 xorg.conf auto-setup
+
+ -- Adam McDaniel <adam@jolicloud.org>  Tue, 02 Feb 2010 15:21:48 -0700
+
 jolicloud-netbook-config (2:1.8.2) robby; urgency=low
 
   * Avoid unnecessary grep and find calls which slow down the startup
