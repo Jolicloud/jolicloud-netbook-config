@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if `lspci | grep VIA | grep -q "Chrome 9"`; then
+if `lspci | grep VIA | grep -q "Chrome 9\|UniChrome"`; then
 
-    # Configure X11.org with VIA Chrome 9-specific configuration
+    # Configure X11.org with VIA-specific configuration
 
-    if [ -e /usr/lib/jolicloud-netbook-config/config-xorg-chrome9.py ]; then
-        /usr/lib/jolicloud-netbook-config/config-xorg-chrome9.py
+    if [ -e /usr/lib/jolicloud-netbook-config/config-xorg-via.py ]; then
+        /usr/lib/jolicloud-netbook-config/config-xorg-via.py
     fi
 
 

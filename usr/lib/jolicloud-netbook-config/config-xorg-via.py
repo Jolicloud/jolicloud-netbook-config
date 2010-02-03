@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#       config-xorg-chrome9.py -- Customise the xorg.conf for Chrome 9 hardware
+#       config-xorg-via.py -- Customise the xorg.conf for VIA hardware
 #       
 #       Copyright 2009 Alberto Milone <alberto.milone@canonical.com>
 #       Copyright 2009 Adam McDaniel <adam@jolicloud.com>
