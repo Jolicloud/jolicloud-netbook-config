@@ -1,3 +1,9 @@
+jolicloud-netbook-config (2:1.9.1) robby; urgency=low
+
+  * Added support for VIA Unichrome / Renamed config to just "via"
+
+ -- Adam McDaniel <adam@jolicloud.org>  Wed, 03 Feb 2010 15:06:19 -0700
+
 jolicloud-netbook-config (2:1.9.0) robby; urgency=low
 
   * Added a etc/jolicloud-netbook-config.d/README to explain its purpose
