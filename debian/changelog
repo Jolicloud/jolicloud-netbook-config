@@ -1,3 +1,10 @@
+jolicloud-netbook-config (2:1.9.2) robby; urgency=low
+
+  * Fixed issue where /etc/jolicloud-netbook-config.d/ scripts were not
+    executing properly
+
+ -- Adam McDaniel <adam@jolicloud.org>  Wed, 03 Feb 2010 19:56:30 -0700
+
 jolicloud-netbook-config (2:1.9.1) robby; urgency=low
 
   * Added support for VIA Unichrome / Renamed config to just "via"
