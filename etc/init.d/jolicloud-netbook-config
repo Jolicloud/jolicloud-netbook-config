@@ -202,7 +202,9 @@ do_start () {
 	fi
 
 	# Process external JNC scripts
-	. /etc/jolicloud-netbook-config.d/*.sh
+	for script in /etc/jolicloud-netbook-config.d/*.sh; do
+		. $script
+	done
 
 	# finished
 
