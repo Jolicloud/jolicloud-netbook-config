@@ -1,3 +1,10 @@
+jolicloud-netbook-config (2:1.9.3) robby; urgency=low
+
+  * Moved cpufreq config files from acpi-support to pm-utils
+  * Converted debian/rules to use devscripts(8)
+
+ -- Adam McDaniel <adam@jolicloud.org>  Sun, 06 Jun 2010 19:43:40 +0200
+
 jolicloud-netbook-config (2:1.9.2) robby; urgency=low
 
   * Fixed issue where /etc/jolicloud-netbook-config.d/ scripts were not
