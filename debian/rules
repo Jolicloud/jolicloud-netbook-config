@@ -1,76 +1,61 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
 
-install_dir=install -d -m 755
-install_file=install -m 644
-install_script=install -m 755
-install_binary=install -m 755 -s
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
 
-DEBVERSION := $(shell dpkg-parsechangelog | grep ^Version: | cut -d' ' -f2)
 
-build:
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	# Add here commands to configure the package.
 
-clean:
-	$(checkdir)
-	-rm -f  *~ */*~ debian/files* debian/*substvars
-	-rm -rf debian/tmp
+	touch configure-stamp
 
-binary-indep: checkroot
-	$(checkdir)
-	-rm -rf debian/tmp
 
-	$(install_dir) debian/tmp/DEBIAN/
-	$(install_file) debian/conffiles debian/tmp/DEBIAN/
-	$(install_script) debian/postinst debian/tmp/DEBIAN/
-	$(install_script) debian/postrm debian/tmp/DEBIAN/
+build: build-stamp
 
-	$(install_dir) debian/tmp/etc/acpi/ac.d/
-	$(install_dir) debian/tmp/etc/acpi/battery.d/
-	$(install_script) etc/acpi/ac.d/* debian/tmp/etc/acpi/ac.d
-	$(install_script) etc/acpi/battery.d/* debian/tmp/etc/acpi/battery.d
-	$(install_dir) debian/tmp/etc/default/
-	$(install_file) etc/default/* debian/tmp/etc/default/
-	$(install_dir) debian/tmp/etc/init.d/
-	$(install_script) etc/init.d/* debian/tmp/etc/init.d/
-	$(install_dir) debian/tmp/etc/hal/fdi/policy/
-	$(install_file) etc/hal/fdi/policy/* debian/tmp/etc/hal/fdi/policy/
-	$(install_dir) debian/tmp/etc/jolicloud-netbook-config.d/
-	$(install_file) etc/jolicloud-netbook-config.d/* debian/tmp/etc/jolicloud-netbook-config.d/
-	chmod 755 debian/tmp/etc/jolicloud-netbook-config.d/*.sh
-	$(install_dir) debian/tmp/etc/modprobe.d/
-	$(install_script) etc/modprobe.d/* debian/tmp/etc/modprobe.d/
+build-stamp: configure-stamp  
+	dh_testdir
+	touch $@
 
-	$(install_dir) debian/tmp/usr/bin/
-	$(install_script) usr/bin/* debian/tmp/usr/bin/
+clean: 
+	dh_testdir
+	dh_testroot
+	rm -rf build-stamp configure-stamp
 
-	$(install_dir) debian/tmp/usr/lib/jolicloud-netbook-config/
-	$(install_file) usr/lib/jolicloud-netbook-config/* debian/tmp/usr/lib/jolicloud-netbook-config/
-	chmod 755 debian/tmp/usr/lib/jolicloud-netbook-config/*.pl
-	chmod 755 debian/tmp/usr/lib/jolicloud-netbook-config/*.py
+	dh_clean 
 
-	$(install_dir) debian/tmp/usr/share/doc/jolicloud-netbook-config/
-	$(install_file) debian/changelog debian/tmp/usr/share/doc/jolicloud-netbook-config/changelog.Debian
-	gzip -9v debian/tmp/usr/share/doc/jolicloud-netbook-config/*
-	$(install_file) debian/copyright debian/tmp/usr/share/doc/jolicloud-netbook-config/
-	$(install_file) usr/share/doc/jolicloud-netbook-config/* debian/tmp/usr/share/doc/jolicloud-netbook-config/
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
 
-	dpkg-gencontrol -pjolicloud-netbook-config
 
-	chown -R root:root debian/tmp
-	chmod -R go=rX debian/tmp
-	dpkg --build debian/tmp ..
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
 
-binary-arch:
-
-define checkdir
-	test -f debian/rules
-endef
-
-# Below here is fairly generic really
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+	dh_install
+	dh_icons
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
 
 binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
 
-checkroot:
-	$(checkdir)
-	test root = "`whoami`"
-
-.PHONY: binary binary-arch binary-indep clean checkroot

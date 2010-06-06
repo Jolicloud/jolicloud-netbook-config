@@ -2,7 +2,8 @@ Source: jolicloud-netbook-config
 Section: jolicloud/misc
 Priority: optional
 Maintainer: Adam McDaniel <adam@jolicloud.org>
-Standards-Version: 3.6.1.0
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.0
 
 Package: jolicloud-netbook-config
 Architecture: all
