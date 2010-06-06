@@ -1,0 +1,46 @@
+
+
+# This script makes anacron jobs start/stop when a machine gets or
+# looses AC power.
+
+# The /etc/init.d/anacron script now normally tries to avoid running
+# anacron unless on AC power, so as to avoid running down the battery.
+# (Things like the slocate updatedb cause a lot of IO.)  Rather than
+# trying to second-guess which events reflect having or not having
+# power, we just try to run anacron every time and let it abort if
+# there's no AC.  You'll see a message on the cron syslog facility 
+# (typically /var/log/cron) if it does run.
+
+case "$1" in
+    false)
+        for i in /sys/devices/system/cpu/cpu?/cpufreq/scaling_governor; do
+            echo "performance" > $i;
+        done
+
+        if [ -e /sys/devices/system/cpu/sched_smt_power_savings ]; then
+            echo 0 > /sys/devices/system/cpu/sched_smt_power_savings;
+        fi
+	;;
+    true)
+        for i in /sys/devices/system/cpu/cpu?/cpufreq/scaling_governor; do
+            echo "ondemand" > $i;
+        done
+
+        if [ -e /sys/devices/system/cpu/sched_smt_power_savings ]; then
+            echo 1 > /sys/devices/system/cpu/sched_smt_power_savings;
+        fi
+
+        # Disable Advanced Power Management on all SCSI drives. This silences the
+        # incessant clicking heard by cheap harddrives while on battery power.
+        for d in /dev/disk/by-id/scsi*; do
+            # Regexp search to avoid grep/find. We only should run hdparm on
+            # files that patch the previous for loop, but do not end in
+            # part[0-9]. This avoids needlessly running hdparm for every single
+            # partition configured.
+            if ! [[ $d =~ part.+$ ]]; then
+                /sbin/hdparm -B 255 $d > /dev/null
+            fi
+        done
+	;;
+esac
+

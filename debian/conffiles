@@ -1,4 +1,2 @@
-/etc/acpi/ac.d/99-jolicloud-netbook-config.sh
-/etc/acpi/battery.d/99-jolicloud-netbook-config.sh
 /etc/default/jolicloud-netbook-config
 /etc/init.d/jolicloud-netbook-config
