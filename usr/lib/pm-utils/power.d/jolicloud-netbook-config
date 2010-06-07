@@ -1,4 +1,4 @@
-
+#!/bin/bash
 
 # This script makes anacron jobs start/stop when a machine gets or
 # looses AC power.
