@@ -1,3 +1,10 @@
+jolicloud-netbook-config (2:1.9.6) robby; urgency=low
+
+  * Setup the pm-utils/power.d/JNC script to run as /bin/bash so regexp
+    code is executed properly
+
+ -- Adam McDaniel <adam@jolicloud.org>  Mon, 07 Jun 2010 17:01:32 +0200
+
 jolicloud-netbook-config (2:1.9.5) robby; urgency=low
 
   * Added cpufreq fallback to devices that do not support "ondemand"
