@@ -1,3 +1,25 @@
+jolicloud-netbook-config (2:1.9.5) robby; urgency=low
+
+  * Added cpufreq fallback to devices that do not support "ondemand"
+    governor (celerons) and instead use "powersave"
+  * Set minimum power-save CPU speed to 450 Mhz. Useful for Celerons who
+    were powersaving at 337 Mhz which is still too slow. Atom's built-in
+    minimum speed is still 800 MHz.
+
+ -- Adam McDaniel <adam@jolicloud.org>  Mon, 07 Jun 2010 16:11:13 +0200
+
+jolicloud-netbook-config (2:1.9.4) UNRELEASED; urgency=low
+
+  * Converted debian/rules to use devscripts(8)
+
+ -- Adam McDaniel <adam@jolicloud.org>  Mon, 07 Jun 2010 16:10:55 +0200
+
+jolicloud-netbook-config (2:1.9.3) UNRELEASED; urgency=low
+
+  * Moved cpufreq config files from acpi-support to pm-utils
+
+ -- Adam McDaniel <adam@jolicloud.org>  Mon, 07 Jun 2010 16:10:50 +0200
+
 jolicloud-netbook-config (2:1.9.2) robby; urgency=low
 
   * Fixed issue where /etc/jolicloud-netbook-config.d/ scripts were not
