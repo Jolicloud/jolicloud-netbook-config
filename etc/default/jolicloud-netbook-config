@@ -7,6 +7,6 @@
 # cpufreq-info and cpufreq-set
 
 JNC_CPUFREQ_GOVERNOR="performance"
-JNC_CPUFREQ_MIN_FREQ="300000"
+JNC_CPUFREQ_MIN_FREQ="450000"
 
 
