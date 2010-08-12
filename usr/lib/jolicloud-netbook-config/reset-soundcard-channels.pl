@@ -6,7 +6,7 @@ use IO::Handle;
 my $channel = "";
 my $mixer = {};
 
-my $LOGFILE = "/var/log/jolicloud-netbook-config";
+my $LOGFILE = "/tmp/jolicloud-netbook-config";
 my $VERBOSE = 0;
 my $DRYRUN = 0;
 my $DEBUG = 0;
@@ -107,8 +107,8 @@ my $config = {
     },
 };
 
-open( LOG, ">>$LOGFILE" );
-STDOUT->fdopen( \*LOG, "w" ) || die $!;
+#open( LOG, ">>$LOGFILE" );
+#STDOUT->fdopen( \*LOG, "w" ) || die $!;
 
 &log( "Begin $0" );
 
@@ -191,12 +191,13 @@ while ( ( $channel, $data ) = each %{ $mixer } ) {
         print STDERR "$cmd\n" if ( $VERBOSE );
         &log( $cmd );
         # Execute the command. Data returned on STDOUT is relayed to LOG
-        print `$cmd` . "\n" if ( ! $DRYRUN );
+        my $out = `$cmd` if ( ! $DRYRUN );
+        print $out . "\n" if ( $VERBOSE );
     }
 }
 
 &log( "Finish $0" );
-close( LOG );
+#close( LOG );
 
 
 
@@ -209,9 +210,11 @@ sub log
 
     my $time = sprintf "%04d-%02d-%02d %02d:%02d:%02d", reverse @time[ 0..5 ];
 
-    print LOG "$time (RSC) $msg\n";
+    if ( $DEBUG ) {
+        print "$time (RSC) $msg\n";
+    }
     if ( $msg =~ /^(WARNING|ERROR)/ ) {
-        print STDERR "$time (JNS) $msg\n";
+        print STDERR "$time (RSC) $msg\n";
     }
 }
 
