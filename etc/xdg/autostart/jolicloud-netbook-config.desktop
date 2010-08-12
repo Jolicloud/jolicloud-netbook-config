@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Jolicloud Netbook Config
+Comment=JNC Sound fix
+Icon=gnome-fs-desktop
+Exec=/usr/lib/jolicloud-netbook-config/reset-soundcard-channels.pl
+Terminal=false
+Type=Application
+Categories=
+OnlyShowIn=GNOME;XFCE;
+X-GNOME-Autostart-Phase=Desktop
+X-GNOME-Autostart-Notify=false
+X-GNOME-Autorestart=false
+X-GNOME-Autostart-Delay=15
