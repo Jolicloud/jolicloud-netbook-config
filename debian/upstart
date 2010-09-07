@@ -28,7 +28,7 @@ script
         echo "${SYSCTL} $1=$2" >>${LOGFILE}
 
         if ! ${SYSCTL} "$1" 2>>${LOGFILE} >/dev/null; then
-                return 0;
+                return 0
         fi
 
         ${SYSCTL} -w $1=$2 >> ${LOGFILE}
@@ -39,11 +39,11 @@ script
     set_sysfs () {
         if [ ! -e $1 ]; then
                 echo "Error: cannot find $1" >> ${LOGFILE}
-                return 0;
+                return 0
         fi
 
         echo "$1 = $2" >> ${LOGFILE}
-        echo "$2" > "$1" 2>> ${LOGFILE}
+        echo "$2" > "$1" 2>> ${LOGFILE} || true
 
         return 0
     }
