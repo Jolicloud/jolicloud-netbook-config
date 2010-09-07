@@ -1,3 +1,12 @@
+jolicloud-netbook-config (2:2.0.0~1.git.20100907t003751.b9f78da) robby-lucid; urgency=low
+
+  ** SNAPSHOT build @b9f78daca12750f06c97c149b51bd49e1b24cc47 **
+
+  * Deleted JNC's poulsbo code, now handled by jolicloud-poulsbo
+  * Set package source code format to "3.0 (git)"
+
+ -- Adam McDaniel <adam@jolicloud.org>  Mon, 06 Sep 2010 18:37:51 -0600
+
 jolicloud-netbook-config (2:1.9.7) robby; urgency=low
 
   * Configured a user-side component of JNC to run after logging in.
