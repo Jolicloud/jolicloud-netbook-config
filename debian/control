@@ -7,7 +7,7 @@ Standards-Version: 3.8.0
 
 Package: jolicloud-netbook-config
 Architecture: all
-Depends: dmidecode, perl, acpi
+Depends: dmidecode, perl, acpi, upstart (>= 0.6.3-6)
 Recommends: linux-image-jolicloud | linux-image-jolicloud-atom
 Conflicts: eee-osd
 Provides: eee-osd

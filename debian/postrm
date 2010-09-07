@@ -6,9 +6,6 @@
 ######################################################################
 set -e
 
-
-# remove jolicloud-netbook-config init.d script
-
-update-rc.d -f jolicloud-netbook-config remove >/dev/null || exit $?
+#DEBHELPER#
 
 exit 0

@@ -7,13 +7,6 @@
 set -e
 
 
-# add eeepc-config init.d script
-
-if [ -x "/etc/init.d/jolicloud-netbook-config" ]; then
-	update-rc.d jolicloud-netbook-config start 40 2 3 4 5 . stop 85 0 . > /dev/null || exit $?
-fi
-
-
 # remove asus mail ACPI event, causes conflict with some hotkeys
 
 rm -f /etc/acpi/events/asus-mail
@@ -24,9 +17,9 @@ rm -f /etc/acpi/events/asus-mail
 invoke-rc.d acpid restart
 
 
-# start eeepc-config
+# start jolicloud-netbook-config
 
-invoke-rc.d jolicloud-netbook-config start
+start jolicloud-netbook-config
 
 
 # Change grub default timeout
@@ -45,5 +38,7 @@ if [ ! -x /etc/init.d/ondemand ]; then
     chmod +x /etc/init.d/ondemand;
 fi
 
+
+#DEBHELPER#
 
 exit 0

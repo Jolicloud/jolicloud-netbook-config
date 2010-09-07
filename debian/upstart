@@ -1,0 +1,103 @@
+# Jolicloud Netbook Config
+#
+# Applies hardware-specific changes that are hardware-independent. I.e.,
+# sound card settings, wifi settings, CPU frequency settings, etc.
+
+description "Jolicloud Netbook Config"
+author      "Adam McDaniel <adam@jolicloud.org>"
+
+start on (starting gdm
+          or starting kdm
+          or starting xdm)
+
+task
+
+script
+    LOGFILE="/var/log/jolicloud-netbook-config"
+    SYSCTL='/sbin/sysctl'
+
+    if [ -e /etc/default/jolicloud-netbook-config ]; then
+        . /etc/default/jolicloud-netbook-config
+    fi
+
+    #
+    # Shared functions
+    #
+
+    set_sysctl () {
+        echo "${SYSCTL} $1=$2" >>${LOGFILE}
+
+        if ! ${SYSCTL} "$1" 2>>${LOGFILE} >/dev/null; then
+                return 0;
+        fi
+
+        ${SYSCTL} -w $1=$2 >> ${LOGFILE}
+
+        return 0
+    }
+
+    set_sysfs () {
+        if [ ! -e $1 ]; then
+                echo "Error: cannot find $1" >> ${LOGFILE}
+                return 0;
+        fi
+
+        echo "$1 = $2" >> ${LOGFILE}
+        echo "$2" > "$1" 2>> ${LOGFILE}
+
+        return 0
+    }
+
+
+    #
+    # Common settings
+    #
+
+    set_sysctl dev.wifi0.ledpin 1
+    set_sysctl dev.wifi0.softled 1
+
+    set_sysctl vm.swappiness 0
+    set_sysctl vm.dirty_writeback_centisecs 1500
+
+    [ -e /sys/module/snd_hda_intel/parameters/power_save ] &&
+        echo 10 > /sys/module/snd_hda_intel/parameters/power_save;
+    [ -e /sys/module/snd_hda_intel/parameters/power_save_controller ] &&
+        echo Y > /sys/module/snd_hda_intel/parameters/power_save_controller;
+
+    #
+    # Enable the wifi and bluetooth radios if rfkill is handling them
+    #
+
+    for i in /sys/class/rfkill/rfkill*/state; do
+        set_sysfs $i 1
+    done
+
+    #
+    # Enable the camera and cardreader
+    #
+
+    set_sysfs /sys/bus/platform/devices/eeepc/camera 1
+    set_sysfs /sys/bus/platform/devices/eeepc/cardr 1
+
+    #
+    # Set other configuration options
+    #
+
+    if [ "${JNC_CPUFREQ_MIN_FREQ}" != "" ]; then
+        for i in /sys/devices/system/cpu/cpu?/cpufreq/scaling_min_freq; do
+            set_sysfs $i ${JNC_CPUFREQ_MIN_FREQ}
+        done
+    fi
+
+    if [ "${JNC_CPUFREQ_GOVERNOR}" != "" ]; then
+        for i in /sys/devices/system/cpu/cpu?/cpufreq/scaling_governor; do
+            set_sysfs $i ${JNC_CPUFREQ_GOVERNOR}
+        done
+    fi
+
+    # Process external JNC scripts
+    for script in /etc/jolicloud-netbook-config.d/*.sh; do
+        . $script
+    done
+
+end script
