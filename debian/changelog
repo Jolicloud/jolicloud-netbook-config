@@ -1,3 +1,10 @@
+jolicloud-netbook-config (2:1.9.7) robby; urgency=low
+
+  * Configured a user-side component of JNC to run after logging in.
+  * Modified reset-soundcard-channels.pl to run properly as the user.
+
+ -- Adam McDaniel <adam@jolicloud.org>  Thu, 12 Aug 2010 14:28:17 -0600
+
 jolicloud-netbook-config (2:1.9.6) robby; urgency=low
 
   * Setup the pm-utils/power.d/JNC script to run as /bin/bash so regexp
