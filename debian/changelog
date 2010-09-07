@@ -1,13 +1,15 @@
-jolicloud-netbook-config (2:2.0.0~2.git.20100907t023645.615d634) lucid; urgency=low
+jolicloud-netbook-config (2:2.0.0~3.git.20100907t162531.1c0a599) lucid; urgency=low
 
-  ** SNAPSHOT build @615d63437745a71cbeae63532d442e513cf258b9 **
+  ** SNAPSHOT build @1c0a59993a596741e406ac4951586bbe14830842 **
 
   * Deleted JNC's poulsbo code, now handled by jolicloud-poulsbo
   * Set package source code format to "3.0 (git)"
   * Snapshot 2:2.0.0~1.git.20100907t003751.b9f78da
   * Converted JNC init script to an upstart job
+  * Cleaned up upstart script to be more forgiving incase exact sysfs
+    paths are not cooperative
 
- -- Adam McDaniel <adam@jolicloud.org>  Mon, 06 Sep 2010 20:36:45 -0600
+ -- Adam McDaniel <adam@jolicloud.org>  Tue, 07 Sep 2010 10:25:31 -0600
 
 jolicloud-netbook-config (2:1.9.7) robby; urgency=low
 
