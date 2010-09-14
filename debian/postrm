@@ -6,6 +6,12 @@
 ######################################################################
 set -e
 
+case "$1" in
+    remove|pruge)
+        dpkg-divert --rename --remove /etc/init.d/ondemand
+    ;;
+esac
+
 #DEBHELPER#
 
 exit 0

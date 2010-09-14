@@ -34,6 +34,11 @@ case "$1" in
         if [ -w /boot/grub/menu.lst ] ; then
             sed -i.dpkg-old -e 's/^timeout[ \t]*[0-9]*$/timeout\t\t1/' /boot/grub/menu.lst
         fi
+
+        if dpkg --compare-versions "$2" le "2:2.0.0"; then
+            dpkg-divert --add --package "jolicloud-netbook-config" --divert /usr/lib/jolicloud-netbook-config/ondemand-diverted.init --rename /etc/init.d/ondemand
+        fi
+
         ;;
 
     abort-upgrade|abort-deconfigure|abort-remove)
