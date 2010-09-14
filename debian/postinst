@@ -4,40 +4,46 @@
 # jolicloud-netbook-config by Adam McDaniel, (c) 2009
 # postinst script
 ######################################################################
+# This script can be called in the following ways:
+#
+# After the package was installed:
+#       <postinst> configure <old-version>
+#
+# If prerm fails during upgrade or fails on failed upgrade:
+#       <old-postinst> abort-upgrade <new-version>
+#
+# If prerm fails during deconfiguration of a package:
+#       <postinst> abort-deconfigure in-favour <new-package> <version>
+#                  removing <old-package> <version>
+#
+# If prerm fails during replacement due to conflict:
+#       <postinst> abort-remove in-favour <new-package> <version>
+
 set -e
 
+case "$1" in
+    configure)
 
-# remove asus mail ACPI event, causes conflict with some hotkeys
+        # remove asus mail ACPI event, causes conflict with some hotkeys
+        rm -f /etc/acpi/events/asus-mail
 
-rm -f /etc/acpi/events/asus-mail
+        # restart ACPI
+        invoke-rc.d acpid restart
 
+        # Change grub default timeout
+        if [ -w /boot/grub/menu.lst ] ; then
+            sed -i.dpkg-old -e 's/^timeout[ \t]*[0-9]*$/timeout\t\t1/' /boot/grub/menu.lst
+        fi
+        ;;
 
-# restart ACPI
+    abort-upgrade|abort-deconfigure|abort-remove)
+        ;;
 
-invoke-rc.d acpid restart
-
-
-# start jolicloud-netbook-config
-
-start jolicloud-netbook-config
-
-
-# Change grub default timeout
-
-if [ -w /boot/grub/menu.lst ] ; then
-    sed -i.dpkg-old -e 's/^timeout[ \t]*[0-9]*$/timeout\t\t1/' /boot/grub/menu.lst
-fi
-
-
-# Re-enable init script 'ondemand', we no longer handle it ourselves.
-# Earlier versions of JNC disabled this script. Keeping this "chmod +x"
-# code is only required for the first JNC upgrade, or after the PreBeta is
-# released.
-
-if [ ! -x /etc/init.d/ondemand ]; then
-    chmod +x /etc/init.d/ondemand;
-fi
-
+    *)
+        echo "$0 called with unknown argument \`$1\'" 1>&2
+        exit 1
+        ;;
+esac
 
 #DEBHELPER#
 
