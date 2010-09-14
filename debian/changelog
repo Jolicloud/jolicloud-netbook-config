@@ -1,13 +1,13 @@
-jolicloud-netbook-config (2:2.0.0~3.git.20100907t162531.1c0a599) lucid; urgency=low
-
-  ** SNAPSHOT build @1c0a59993a596741e406ac4951586bbe14830842 **
+jolicloud-netbook-config (2:2.0.0) robby-lucid; urgency=low
 
   * Deleted JNC's poulsbo code, now handled by jolicloud-poulsbo
   * Set package source code format to "3.0 (git)"
-  * Snapshot 2:2.0.0~1.git.20100907t003751.b9f78da
   * Converted JNC init script to an upstart job
   * Cleaned up upstart script to be more forgiving incase exact sysfs
     paths are not cooperative
+  * Added dpkg-divert rule to disable /etc/init.d/ondemand
+  * Set a standby timeout (AC: 10min, Batt: 2min) to reduce constant HDD
+    spin-up/down noise
 
  -- Adam McDaniel <adam@jolicloud.org>  Tue, 07 Sep 2010 10:25:31 -0600
 
