@@ -8,7 +8,10 @@ author      "Adam McDaniel <adam@jolicloud.org>"
 
 start on (starting gdm
           or starting kdm
-          or starting xdm)
+          or starting xdm
+          or starting slim
+          or starting ubiquity
+          or starting oem-config)
 
 task
 
