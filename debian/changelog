@@ -1,3 +1,9 @@
+jolicloud-netbook-config (2:2.0.1) robby-lucid; urgency=low
+
+  * Added slim/ubiquity/oem-config as starting events in upstart script
+
+ -- Adam McDaniel <adam@jolicloud.org>  Sun, 26 Sep 2010 20:23:52 -0600
+
 jolicloud-netbook-config (2:2.0.0) robby-lucid; urgency=low
 
   * Deleted JNC's poulsbo code, now handled by jolicloud-poulsbo
