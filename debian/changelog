@@ -1,3 +1,9 @@
+jolicloud-netbook-config (2:2.0.2) robby; urgency=low
+
+  * Added jolicloud-displaymanager support
+
+ -- Jérémy Bethmont <jerem@jolicloud.org>  Tue, 08 Feb 2011 17:50:08 +0100
+
 jolicloud-netbook-config (2:2.0.1) robby-lucid; urgency=low
 
   * Added slim/ubiquity/oem-config as starting events in upstart script
