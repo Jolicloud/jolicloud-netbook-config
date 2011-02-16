@@ -4,6 +4,8 @@ Priority: optional
 Maintainer: Adam McDaniel <adam@jolicloud.org>
 Build-Depends: debhelper (>= 7)
 Standards-Version: 3.8.0
+Vcs-Git: git://github.com/jolicloud/jolicloud-netbook-config.git
+Vcs-Browser: https://github.com/jolicloud/jolicloud-netbook-config
 
 Package: jolicloud-netbook-config
 Architecture: all
